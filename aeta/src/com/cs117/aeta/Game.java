@@ -62,7 +62,6 @@ public class Game implements ApplicationListener {
 			}
 		}
 		shapeRenderer.end();
-		//GameKeys.update();
 		
 		if (Gdx.input.isTouched()) {
 			Vector3 touchPos = new Vector3();

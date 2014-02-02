@@ -1,0 +1,11 @@
+*.swp
+*.class
+
+# built application files
+*.apk
+*.ap_
+
+bin/
+gen/
+
+.metadata/
