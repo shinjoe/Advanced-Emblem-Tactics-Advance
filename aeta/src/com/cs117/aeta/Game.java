@@ -14,10 +14,14 @@ public class Game implements ApplicationListener {
 	
 	public static int WIDTH;
 	public static int HEIGHT;
+	
 	public static int[][] TileMap;
 	
-	public static int BLOCK_WIDTH = 50;
-	public static int BLOCK_HEIGHT = 50;
+	public static int BLOCK_WIDTH;
+	public static int BLOCK_HEIGHT;
+	
+	public static final int NUM_ROWS = 8;
+	public static final int NUM_COLS = 10;
 	private ShapeRenderer shapeRenderer;
 	
 	private OrthographicCamera cam;
@@ -25,6 +29,9 @@ public class Game implements ApplicationListener {
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+		
+		BLOCK_WIDTH = WIDTH / NUM_COLS;
+		BLOCK_HEIGHT = HEIGHT / NUM_ROWS;
 		
 		TileMap = new int[][] { 
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
