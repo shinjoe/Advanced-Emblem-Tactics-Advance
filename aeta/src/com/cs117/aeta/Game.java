@@ -56,6 +56,7 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
+		// render the tilemap
 		shapeRenderer.begin(ShapeType.Filled);
 		for (int i = TileMap.length - 1; i > -1; i--) {
 			for (int j = 0; j < TileMap[0].length; j++) {
@@ -76,6 +77,7 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
+			// make tile green when touched
 			TileMap[(int) (touchPos.y / BLOCK_HEIGHT)][(int) (touchPos.x / BLOCK_WIDTH)] = 2;
 		}
 	}
