@@ -22,10 +22,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
 	private Channel mChannel;
-	private MainActivity mActivity;
+	private MenuActivity mActivity;
 	
 	public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-			MainActivity activity) {
+			MenuActivity activity) {
 		this.mManager = manager;
 		this.mChannel = channel;
 		this.mActivity = activity;
@@ -42,9 +42,11 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 				Toast toast = Toast.makeText(context, "Wi-Fi Direct Enabled", Toast.LENGTH_LONG);
 				toast.show();
+				mActivity.setIsWifiP2pEnabled(true);
 			} else {
 				Toast toast = Toast.makeText(context, "Wi-Fi Direct Disabled", Toast.LENGTH_LONG);
 				toast.show();
+				mActivity.setIsWifiP2pEnabled(false);
 			}
 		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 			// Call WifiP2pManager.requestPeers() to get a list of current peers
@@ -54,5 +56,4 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			// Respond to this device's Wi-Fi state changing
 		}
 	}
-
 }
