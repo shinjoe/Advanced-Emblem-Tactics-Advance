@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.HashMap;
+
+import com.cs117.tile_placeable.*;
+
 
 public class Game implements ApplicationListener {
 	
@@ -25,6 +29,8 @@ public class Game implements ApplicationListener {
 	private ShapeRenderer shapeRenderer;
 	
 	private OrthographicCamera cam;
+	
+	private HashMap<Coordinate, Unit> unitMap;
 	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
@@ -48,6 +54,12 @@ public class Game implements ApplicationListener {
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.translate(WIDTH/2, HEIGHT/2);
 		cam.update();		
+		
+		unitMap = new HashMap<Coordinate, Unit>();
+		// put a unit at (0, 0)
+		unitMap.put(new Coordinate(0, 0), new Unit(10, UNIT_TYPE.INFANTRY));
+		// put a unit at (5, 1)
+		unitMap.put(new Coordinate(5, 1), new Unit(10, UNIT_TYPE.INFANTRY));
 	}
 	
 	public void render() {
@@ -56,8 +68,8 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
-		// render the tilemap
 		shapeRenderer.begin(ShapeType.Filled);
+		// render the tilemap
 		for (int i = TileMap.length - 1; i > -1; i--) {
 			for (int j = 0; j < TileMap[0].length; j++) {
 				Color curColor = Color.BLACK;
@@ -68,6 +80,12 @@ public class Game implements ApplicationListener {
 				shapeRenderer.setColor(curColor);
 				shapeRenderer.rect(j * BLOCK_WIDTH,  BLOCK_HEIGHT * (TileMap.length - 1) - i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
 			}
+		}
+		
+		// render the units
+		for (Coordinate c : unitMap.keySet()) {
+			shapeRenderer.setColor(Color.CYAN);
+			shapeRenderer.rect(c.getX() * BLOCK_WIDTH, c.getY() * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
 		}
 		shapeRenderer.end();
 		
