@@ -24,6 +24,8 @@ public class Game implements ApplicationListener {
 	public static int BLOCK_WIDTH;
 	public static int BLOCK_HEIGHT;
 	
+	public static final int TILE_OFFSET = 2;
+	
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
 	private ShapeRenderer shapeRenderer;
@@ -31,6 +33,8 @@ public class Game implements ApplicationListener {
 	private OrthographicCamera cam;
 	
 	private HashMap<Coordinate, Unit> unitMap;
+	
+	private Coordinate selectedTile;
 	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
@@ -60,11 +64,13 @@ public class Game implements ApplicationListener {
 		unitMap.put(new Coordinate(0, 0), new Unit(10, UNIT_TYPE.INFANTRY));
 		// put a unit at (5, 1)
 		unitMap.put(new Coordinate(5, 1), new Unit(10, UNIT_TYPE.INFANTRY));
+		
+		selectedTile = new Coordinate(-1, -1);
 	}
 	
 	public void render() {
-		// clear the screen to black
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		// clear the screen to white
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
@@ -76,16 +82,32 @@ public class Game implements ApplicationListener {
 				if (TileMap[i][j] == 1)
 					curColor = Color.WHITE;
 				else if (TileMap[i][j] == 2)
-					curColor = Color.GREEN;
+					curColor = Color.GRAY;
 				shapeRenderer.setColor(curColor);
-				shapeRenderer.rect(j * BLOCK_WIDTH,  BLOCK_HEIGHT * (TileMap.length - 1) - i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+				shapeRenderer.rect(j * BLOCK_WIDTH + TILE_OFFSET,  
+						           BLOCK_HEIGHT * (TileMap.length - 1) - i * BLOCK_HEIGHT + TILE_OFFSET, 
+						           BLOCK_WIDTH  - TILE_OFFSET, 
+						           BLOCK_HEIGHT - TILE_OFFSET);
 			}
 		}
 		
 		// render the units
 		for (Coordinate c : unitMap.keySet()) {
 			shapeRenderer.setColor(Color.CYAN);
-			shapeRenderer.rect(c.getX() * BLOCK_WIDTH, c.getY() * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+			shapeRenderer.rect(c.getX() * BLOCK_WIDTH + TILE_OFFSET, 
+					           c.getY() * BLOCK_HEIGHT + TILE_OFFSET, 
+					           BLOCK_WIDTH - TILE_OFFSET, 
+					           BLOCK_HEIGHT - TILE_OFFSET);
+		}
+		
+		// render the selected tile
+		if (selectedTile.getX() != -1) {
+			shapeRenderer.setColor(Color.RED);
+			//shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.rect(selectedTile.getX() * BLOCK_WIDTH + TILE_OFFSET, 
+					           selectedTile.getY() * BLOCK_HEIGHT + TILE_OFFSET, 
+					           BLOCK_WIDTH - TILE_OFFSET, 
+					           BLOCK_HEIGHT - TILE_OFFSET);
 		}
 		shapeRenderer.end();
 		
@@ -95,8 +117,14 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
+			int xCoord = (int) touchPos.x / BLOCK_WIDTH;
+			int yCoord = (int) touchPos.y / BLOCK_HEIGHT;
 			// make tile green when touched
-			TileMap[(int) (touchPos.y / BLOCK_HEIGHT)][(int) (touchPos.x / BLOCK_WIDTH)] = 2;
+			TileMap[yCoord][xCoord] = 2;
+			
+			selectedTile.setX(xCoord);
+			selectedTile.setY(NUM_ROWS - yCoord - 1);
+			
 		}
 	}
 	
