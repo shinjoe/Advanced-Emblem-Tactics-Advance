@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
@@ -23,18 +25,20 @@ public class Game implements ApplicationListener {
 	
 	public static int BLOCK_WIDTH;
 	public static int BLOCK_HEIGHT;
-	
 	public static final int TILE_OFFSET = 2;
-	
+	public static int UNIT_TEXT_X_OFFSET;
+	public static int UNIT_TEXT_Y_OFFSET;
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
-	private ShapeRenderer shapeRenderer;
 	
+	private ShapeRenderer shapeRenderer;
+	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
 	
 	private HashMap<Coordinate, Unit> unitMap;
-	
 	private Coordinate selectedTile;
+	
+	private BitmapFont font;
 	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
@@ -42,6 +46,8 @@ public class Game implements ApplicationListener {
 		
 		BLOCK_WIDTH = WIDTH / NUM_COLS;
 		BLOCK_HEIGHT = HEIGHT / NUM_ROWS;
+		UNIT_TEXT_X_OFFSET = BLOCK_WIDTH / 2;
+		UNIT_TEXT_Y_OFFSET = BLOCK_HEIGHT / 2;
 		
 		TileMap = new int[][] { 
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -55,6 +61,9 @@ public class Game implements ApplicationListener {
 		};
 				
 		shapeRenderer = new ShapeRenderer();
+		spriteBatch = new SpriteBatch();
+		font = new BitmapFont();
+		font.setColor(Color.ORANGE);
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.translate(WIDTH/2, HEIGHT/2);
 		cam.update();		
@@ -100,7 +109,7 @@ public class Game implements ApplicationListener {
 			}
 		}
 		
-		// render the units
+		// render the terrain of the units
 		for (Coordinate c : unitMap.keySet()) {
 			shapeRenderer.setColor(Color.CYAN);
 			shapeRenderer.rect(c.getX() * BLOCK_WIDTH + TILE_OFFSET, 
@@ -109,6 +118,17 @@ public class Game implements ApplicationListener {
 					           BLOCK_HEIGHT - TILE_OFFSET);
 		}
 		shapeRenderer.end();
+		
+		spriteBatch.begin();
+		// render the letter of the units
+		for (Coordinate c : unitMap.keySet()) {
+			font.draw(spriteBatch, 
+					 "Inf", 
+					 c.getX() * BLOCK_WIDTH + UNIT_TEXT_X_OFFSET, 
+					 (c.getY() + 1) * BLOCK_HEIGHT - UNIT_TEXT_Y_OFFSET);
+		}
+		spriteBatch.end();
+		
 		
 		if (Gdx.input.isTouched()) {
 			Vector3 touchPos = new Vector3();
@@ -130,6 +150,9 @@ public class Game implements ApplicationListener {
 	public void resize(int width, int height) {}
 	public void pause() {}
 	public void resume() {}
-	public void dispose() {}
+	public void dispose() {
+		spriteBatch.dispose();
+		font.dispose();
+	}
 	
 }
