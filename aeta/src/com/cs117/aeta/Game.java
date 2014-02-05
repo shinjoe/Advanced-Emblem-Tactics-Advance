@@ -75,6 +75,15 @@ public class Game implements ApplicationListener {
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeType.Filled);
+		// render the selection tile 
+		if (selectedTile.getX() != -1) {
+			shapeRenderer.setColor(Color.RED);
+			shapeRenderer.rect(selectedTile.getX() * BLOCK_WIDTH, 
+					           selectedTile.getY() * BLOCK_HEIGHT, 
+					           BLOCK_WIDTH  + TILE_OFFSET, 
+					           BLOCK_HEIGHT + TILE_OFFSET );
+		}
+		
 		// render the tilemap
 		for (int i = TileMap.length - 1; i > -1; i--) {
 			for (int j = 0; j < TileMap[0].length; j++) {
@@ -99,16 +108,6 @@ public class Game implements ApplicationListener {
 					           BLOCK_WIDTH - TILE_OFFSET, 
 					           BLOCK_HEIGHT - TILE_OFFSET);
 		}
-		
-		// render the selected tile
-		if (selectedTile.getX() != -1) {
-			shapeRenderer.setColor(Color.RED);
-			//shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.rect(selectedTile.getX() * BLOCK_WIDTH + TILE_OFFSET, 
-					           selectedTile.getY() * BLOCK_HEIGHT + TILE_OFFSET, 
-					           BLOCK_WIDTH - TILE_OFFSET, 
-					           BLOCK_HEIGHT - TILE_OFFSET);
-		}
 		shapeRenderer.end();
 		
 		if (Gdx.input.isTouched()) {
@@ -120,7 +119,7 @@ public class Game implements ApplicationListener {
 			int xCoord = (int) touchPos.x / BLOCK_WIDTH;
 			int yCoord = (int) touchPos.y / BLOCK_HEIGHT;
 			// make tile green when touched
-			TileMap[yCoord][xCoord] = 2;
+			//TileMap[yCoord][xCoord] = 2;
 			
 			selectedTile.setX(xCoord);
 			selectedTile.setY(NUM_ROWS - yCoord - 1);
