@@ -9,3 +9,6 @@ bin/
 gen/
 
 .metadata/
+
+# android generated bin files
+aeta-android/bin/

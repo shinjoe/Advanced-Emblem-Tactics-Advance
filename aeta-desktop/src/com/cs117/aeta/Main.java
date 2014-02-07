@@ -7,9 +7,9 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "aeta";
-		cfg.useGL20 = false;
-		cfg.width = 500;
-		cfg.height = 400;
+		cfg.useGL20 = true;
+		cfg.width = 600;
+		cfg.height = 320;
 		
 		new LwjglApplication(new Game(), cfg);
 	}

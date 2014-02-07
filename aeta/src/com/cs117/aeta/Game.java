@@ -44,6 +44,8 @@ public class Game implements ApplicationListener {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 		
+	
+		
 		BLOCK_WIDTH = WIDTH / NUM_COLS;
 		BLOCK_HEIGHT = HEIGHT / NUM_ROWS;
 		UNIT_TEXT_X_OFFSET = BLOCK_WIDTH / 2;
