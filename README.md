@@ -1,2 +1,2 @@
-Advance Emblem Tactics Advance
+Advanced Emblem Tactics Advance
 ==============================
