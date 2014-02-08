@@ -9,3 +9,6 @@ bin/
 gen/
 
 .metadata/
+aeta-android/bin/classes/com/cs117/aeta/R$layout.class
+aeta-android/bin/classes/com/cs117/aeta/R$string.class
+aeta-android/bin/jarlist.cache
