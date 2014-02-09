@@ -1,20 +1,26 @@
 package com.cs117.aeta;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.HashMap;
-
-import com.cs117.tile_placeable.*;
-
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.cs117.tile_placeable.Coordinate;
+import com.cs117.tile_placeable.UNIT_TYPE;
+import com.cs117.tile_placeable.Unit;
 
 public class Game implements ApplicationListener {
 	
@@ -35,16 +41,26 @@ public class Game implements ApplicationListener {
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
 	
+	private Vector3 touchPos;
 	private HashMap<Coordinate, Unit> unitMap;
 	private Coordinate selectedTile;
 	
+	ArrayList<Coordinate> walkable;
+	
 	private BitmapFont font;
+	
+	private Stage stage;
+	
+	private TextureAtlas buttonAtlas;
+	private TextButtonStyle buttonStyle;
+	private TextButton moveBtn;
+	private Skin skin;
 	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 		
-	
+		touchPos = new Vector3();
 		
 		BLOCK_WIDTH = WIDTH / NUM_COLS;
 		BLOCK_HEIGHT = HEIGHT / NUM_ROWS;
@@ -64,7 +80,7 @@ public class Game implements ApplicationListener {
 				
 		shapeRenderer = new ShapeRenderer();
 		spriteBatch = new SpriteBatch();
-		font = new BitmapFont();
+		font = new BitmapFont(Gdx.files.internal("fonts/font.fnt"));
 		font.setColor(Color.ORANGE);
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.translate(WIDTH/2, HEIGHT/2);
@@ -75,14 +91,38 @@ public class Game implements ApplicationListener {
 		unitMap.put(new Coordinate(0, 0), new Unit(10, UNIT_TYPE.INFANTRY));
 		// put a unit at (5, 1)
 		unitMap.put(new Coordinate(5, 1), new Unit(10, UNIT_TYPE.INFANTRY));
+		unitMap.put(new Coordinate(0, 7), new Unit(10, UNIT_TYPE.INFANTRY));
+		unitMap.put(new Coordinate(9, 7), new Unit(10, UNIT_TYPE.INFANTRY));
+		unitMap.put(new Coordinate(9, 0), new Unit(10, UNIT_TYPE.INFANTRY));
+
+		walkable = null;
 		
 		selectedTile = new Coordinate(-1, -1);
+		
+		stage = new Stage(WIDTH, HEIGHT, true);
+		skin = new Skin();
+		buttonAtlas = new TextureAtlas("buttons/button.pack");
+		skin.addRegions(buttonAtlas);
+		buttonStyle = new TextButtonStyle();
+		buttonStyle.up = skin.getDrawable("button");
+		buttonStyle.down = skin.getDrawable("buttonpressed");
+		buttonStyle.font = font;	
+		moveBtn = new TextButton("Move", buttonStyle);
+		stage.addActor(moveBtn);
+		moveBtn.setVisible(false);
+		moveBtn.setWidth(BLOCK_WIDTH);
+		moveBtn.setHeight(BLOCK_HEIGHT/2);
+		Gdx.input.setInputProcessor(stage);
+		//moveBtn.addListener(new ButtonListener());
 	}
+	
 	
 	public void render() {
 		// clear the screen to white
 		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//stage.act();
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeType.Filled);
@@ -119,6 +159,18 @@ public class Game implements ApplicationListener {
 					           BLOCK_WIDTH - TILE_OFFSET, 
 					           BLOCK_HEIGHT - TILE_OFFSET);
 		}
+		
+		// render walkable terrain moves
+		if (walkable != null) {
+			for (Coordinate c : walkable) {
+				shapeRenderer.setColor(Color.BLUE);
+				shapeRenderer.rect(c.getX() * BLOCK_WIDTH + TILE_OFFSET,
+								   c.getY() * BLOCK_HEIGHT + TILE_OFFSET,
+								   BLOCK_WIDTH - TILE_OFFSET,
+								   BLOCK_HEIGHT - TILE_OFFSET);
+			}
+		}
+		
 		shapeRenderer.end();
 		
 		spriteBatch.begin();
@@ -130,21 +182,79 @@ public class Game implements ApplicationListener {
 					 (c.getY() + 1) * BLOCK_HEIGHT - UNIT_TEXT_Y_OFFSET);
 		}
 		spriteBatch.end();
+		stage.draw();
 		
-		
-		if (Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
+		if (Gdx.input.justTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			System.out.println("Touch/Click detected");
-			System.out.println("X " + touchPos.x);
-			System.out.println("Y " + touchPos.y);
-			int xCoord = (int) touchPos.x / BLOCK_WIDTH;
-			int yCoord = (int) touchPos.y / BLOCK_HEIGHT;
-			// make tile green when touched
-			//TileMap[yCoord][xCoord] = 2;
 			
+			int xCoord = (int) touchPos.x / BLOCK_WIDTH;
+			int yCoord = (int) (NUM_ROWS - touchPos.y / BLOCK_HEIGHT);		
+
+			
+			// only toggle if selected coordinates are different from previous
+			int prevX = selectedTile.getX();
+			int prevY = selectedTile.getY();
 			selectedTile.setX(xCoord);
-			selectedTile.setY(NUM_ROWS - yCoord - 1);
+			selectedTile.setY(yCoord);
+			
+			// show UI if a coordinate with a unit is pressed
+			if (unitMap.containsKey(selectedTile)) {
+				int quadrant = selectedTile.getQuadrant();
+				float quad_x_offset = 0;
+				float quad_y_offset = 0;
+				if (quadrant == 1) {
+					quad_x_offset = -1 * moveBtn.getWidth() - TILE_OFFSET;
+					quad_y_offset = moveBtn.getHeight() + TILE_OFFSET;
+				} else if (quadrant == 2) {
+					quad_x_offset = moveBtn.getWidth() + TILE_OFFSET;
+					quad_y_offset = moveBtn.getHeight() + TILE_OFFSET;
+				} else if (quadrant == 3) {
+					quad_x_offset = moveBtn.getWidth() + TILE_OFFSET;
+					quad_y_offset = moveBtn.getHeight();
+				} else if (quadrant == 4) {
+					quad_x_offset = -1 * moveBtn.getWidth();
+					quad_y_offset = moveBtn.getHeight();
+				} else {
+					System.err.println("Unexpected Quadrant received...");
+				}
+				moveBtn.setX(xCoord * BLOCK_WIDTH + quad_x_offset);
+				moveBtn.setY(yCoord * BLOCK_HEIGHT + quad_y_offset);
+				moveBtn.setVisible(true);
+			} else {
+				moveBtn.setVisible(false);
+			}
+			
+			// move unit if blue tile selected
+			if (walkable != null) {
+				for (Coordinate c : walkable) {
+					if (c.equals(selectedTile)) {
+						Unit curUnit = unitMap.get(c);
+						System.out.println("removing : ");
+						System.out.println(c);
+						unitMap.remove(new Coordinate(prevX, prevY));
+						unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
+						walkable = null;
+						break;
+					}
+				}
+				// no tile selected, therefore effectively a cancel
+				walkable = null;
+				
+			}
+			
+			// don't change what tile we're examining if a button is being pressed
+			if (moveBtn.isPressed()) {
+				System.out.println("Game::Move pressed");
+				
+				selectedTile.setX(prevX);
+				selectedTile.setY(prevY);
+				// clear button so that movement tiles can be shown
+				moveBtn.setVisible(false);
+				walkable = Unit.getWalkableTerrain(TileMap, selectedTile, unitMap);
+				for (Coordinate c : walkable) {
+					System.out.println(c);
+				}
+			}		
 			
 		}
 	}
@@ -153,8 +263,13 @@ public class Game implements ApplicationListener {
 	public void pause() {}
 	public void resume() {}
 	public void dispose() {
+		buttonAtlas.dispose();
+		skin.dispose();
 		spriteBatch.dispose();
 		font.dispose();
+		shapeRenderer.dispose();
+		stage.dispose();
+		
 	}
 	
 }
