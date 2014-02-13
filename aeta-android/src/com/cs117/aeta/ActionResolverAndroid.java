@@ -7,13 +7,12 @@ package com.cs117.aeta;
  * @author Octagen Lab
  * 
  */
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 
-public class ActionResolverAndroid implements ActionResolver<IntentFilter,WifiDirectBroadcastReceiver,MainActivity> {
+public class ActionResolverAndroid implements ActionResolver {
 	
 	private Handler mUiThread;
 	private AndroidApplication mAppContext;

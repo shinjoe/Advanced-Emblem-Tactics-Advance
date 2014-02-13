@@ -3,4 +3,6 @@
     <string name="app_name">Advanced Emblem Tactics Advance</string>
     <string name="discover_peers">Discover Peers</string>
     <string name="play">Play</string>
+    <string name="create_group">Create Group</string>
+    <string name="disconnect">Disconnect</string>
 </resources>

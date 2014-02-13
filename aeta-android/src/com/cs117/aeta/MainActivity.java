@@ -1,19 +1,25 @@
 package com.cs117.aeta;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -21,8 +27,15 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class MainActivity extends AndroidApplication {
 	
+	public static int SERVER_PORT = 8888;
+	public static int CLIENT_PORT = 8889;
+	
 	private Button mDiscoverButton;
 	private Button mPlayButton;
+	private Button mGroupButton;
+	private Button mDisconnectButton;
+	private Button mTestButton;
+	
 	private ListView mPeerList;
 	private View mGameView;
 	
@@ -30,12 +43,16 @@ public class MainActivity extends AndroidApplication {
 	private Channel mChannel;
 	private WifiDirectBroadcastReceiver mReceiver;
 	private IntentFilter mIntentFilter;
+	private WifiP2pDevice mPeer;
+	
 	private boolean mWifiP2pEnabled;
 	
 	private ArrayList<WifiP2pDevice> mPeerArrayList;
 	private ArrayAdapter<WifiP2pDevice> mPeerAdapter;
 	
 	private ActionResolverAndroid mResolver;
+	
+	private String mServerAddress;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +117,61 @@ public class MainActivity extends AndroidApplication {
 			}
 		});
         
+        mGroupButton = (Button) findViewById(R.id.group_button);
+        mGroupButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mManager.createGroup(mChannel, new ActionListener() {
+
+					@Override
+					public void onSuccess() {
+						Toast.makeText(getApplicationContext(), "Trying to make a group here.", Toast.LENGTH_SHORT).show();
+					}
+					
+					@Override
+					public void onFailure(int reason) {
+						Toast.makeText(getApplicationContext(), "No group for you!", Toast.LENGTH_SHORT).show();
+					}
+				
+				});
+			}
+		});
+        
+        mDisconnectButton = (Button) findViewById(R.id.disconnect_button);
+        mDisconnectButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mManager.removeGroup(mChannel, new ActionListener() {
+
+					@Override
+					public void onSuccess() {
+						Toast.makeText(getApplicationContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
+					}
+					
+					@Override
+					public void onFailure(int reason) {
+						Toast.makeText(getApplicationContext(), "Nope, you're staying here.", Toast.LENGTH_SHORT).show();
+					}
+					
+				});
+				mPeer = null;
+				mPeerArrayList.clear();
+				mPeerAdapter.notifyDataSetChanged();
+			}
+		});
+        
+        mTestButton = (Button) findViewById(R.id.test_button);
+        /*mTestButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				setContentView(R.layout.test);
+				((TextView) findViewById(R.id.textView2)).setText(mPeer.deviceName);
+			}
+		});*/
+        
         mPeerList = (ListView) findViewById(R.id.peer_list);
         mPeerArrayList = new ArrayList<WifiP2pDevice>();
         mPeerAdapter = new ArrayAdapter<WifiP2pDevice>(getApplicationContext(), android.R.layout.simple_list_item_1, mPeerArrayList);
@@ -109,8 +181,27 @@ public class MainActivity extends AndroidApplication {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos,
 					long id) {
-				WifiP2pDevice dev = (WifiP2pDevice) mPeerList.getItemAtPosition(pos);
-				Toast.makeText(getApplicationContext(), dev.toString(), Toast.LENGTH_SHORT).show();
+				mPeer = (WifiP2pDevice) mPeerList.getItemAtPosition(pos);
+				Toast.makeText(getApplicationContext(), mPeer.deviceName, Toast.LENGTH_SHORT).show();
+				
+				WifiP2pConfig config = new WifiP2pConfig();
+				config.deviceAddress = mPeer.deviceAddress;
+				config.wps.setup = WpsInfo.PBC;
+				
+				mManager.connect(mChannel, config, new ActionListener() {
+
+					@Override
+					public void onSuccess() {
+						// WifiDirectBroadcastReceiver will notify us
+						Toast.makeText(getApplicationContext(), "Trying to connect...", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onFailure(int reason) {
+						Toast.makeText(getApplicationContext(), "Herp a derp, connection failed.", Toast.LENGTH_SHORT).show();
+					}
+					
+				});		
 			}
 
 		});
@@ -131,6 +222,10 @@ public class MainActivity extends AndroidApplication {
 
 	public void setIsWifiP2pEnabled(boolean enabled) {
 		mWifiP2pEnabled = enabled;
+	}
+	
+	public void setServerAddress(String serverAddress) {
+		mServerAddress = serverAddress;
 	}
 	
     @Override
