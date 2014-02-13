@@ -43,18 +43,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" >
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="Instructions: 0) Press Disconnect, 1) Press Discover Peers on both devices, 2) Press Create Group on one device, 4) Press on list item on other device to connect, 5) Click OK/Accept on first device, 6) Hope it actually works (status 0), 7) Type something on client and hit Test, 8) Hope this works, too" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Instructions: 0) Press Disconnect, 1) Press Discover Peers on both devices, 2) Press Create Group on one device, 4) Press on list item on other device to connect, 5) Click OK/Accept on first device, 6)Hope it actually works (status 0)" />
-
-    </LinearLayout>
+        <requestFocus />
+    </EditText>
 
     <ListView
         android:id="@+id/peer_list"

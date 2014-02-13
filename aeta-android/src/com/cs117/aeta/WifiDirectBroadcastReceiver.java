@@ -73,6 +73,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 			if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 				Toast.makeText(context, "Wi-Fi Direct Enabled", Toast.LENGTH_SHORT).show();
 				mActivity.setIsWifiP2pEnabled(true);
+				if (mManager != null)
+					mManager.requestPeers(mChannel, peerListListener);
 			} else {
 				Toast.makeText(context, "Wi-Fi Direct Disabled", Toast.LENGTH_SHORT).show();
 				mActivity.setIsWifiP2pEnabled(false);
@@ -108,8 +110,12 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 							mActivity.setServerAddress(ownerAddr);
 							Toast.makeText(context, ownerAddr, Toast.LENGTH_LONG).show();
 							
+							mManager.requestPeers(mChannel, peerListListener);
+							
 							if (info.groupFormed && info.isGroupOwner) {
 								Toast.makeText(context, "I AM GROUP OWNER!!", Toast.LENGTH_SHORT).show();
+								mActivity.setIsServer();
+								mActivity.createServerAsyncTask();
 							} else if (info.groupFormed) {
 								Toast.makeText(context, "...I'm not the group owner... *sniffle*", Toast.LENGTH_SHORT).show();
 							}

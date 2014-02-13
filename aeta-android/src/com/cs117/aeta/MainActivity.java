@@ -1,8 +1,10 @@
 package com.cs117.aeta;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -19,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -34,6 +36,8 @@ public class MainActivity extends AndroidApplication {
 	private Button mPlayButton;
 	private Button mGroupButton;
 	private Button mDisconnectButton;
+	
+	private EditText mEditText;
 	private Button mTestButton;
 	
 	private ListView mPeerList;
@@ -52,13 +56,17 @@ public class MainActivity extends AndroidApplication {
 	
 	private ActionResolverAndroid mResolver;
 	
+	private boolean mIsServer;
 	private String mServerAddress;
+	private ServerAsyncTask mServerAsyncTask;
+	private ClientAsyncTask mClientAsyncTask;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         
+        mIsServer = false;        
         mWifiP2pEnabled = false;
         
         // Create handler to call native Android APIs
@@ -93,8 +101,6 @@ public class MainActivity extends AndroidApplication {
 					@Override
 					public void onSuccess() {
 						Toast.makeText(getApplicationContext(), "It worked!", Toast.LENGTH_SHORT).show();
-						mPeerArrayList.clear();
-						mPeerAdapter.notifyDataSetChanged();
 					}
 					
 					@Override
@@ -162,15 +168,16 @@ public class MainActivity extends AndroidApplication {
 			}
 		});
         
+        mEditText = (EditText) findViewById(R.id.editText1);
         mTestButton = (Button) findViewById(R.id.test_button);
-        /*mTestButton.setOnClickListener(new View.OnClickListener() {
+        mTestButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				setContentView(R.layout.test);
-				((TextView) findViewById(R.id.textView2)).setText(mPeer.deviceName);
+				if (!mIsServer)
+					createClientAsyncTask(mEditText.getText().toString());
 			}
-		});*/
+		});
         
         mPeerList = (ListView) findViewById(R.id.peer_list);
         mPeerArrayList = new ArrayList<WifiP2pDevice>();
@@ -226,6 +233,20 @@ public class MainActivity extends AndroidApplication {
 	
 	public void setServerAddress(String serverAddress) {
 		mServerAddress = serverAddress;
+	}
+	
+	public void setIsServer() {
+		mIsServer = true;
+	}
+	
+	public void createServerAsyncTask() {
+		mServerAsyncTask = new ServerAsyncTask(this);
+		mServerAsyncTask.execute((Void[])null);
+	}
+	
+	public void createClientAsyncTask(String msg) {
+		mClientAsyncTask = new ClientAsyncTask(mServerAddress, msg);
+		mClientAsyncTask.execute((Void[])null);
 	}
 	
     @Override
