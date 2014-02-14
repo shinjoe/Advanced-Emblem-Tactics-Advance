@@ -1,6 +1,5 @@
 package com.cs117.aeta;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 import android.content.BroadcastReceiver;
@@ -41,11 +40,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
         	peers = mActivity.getArrayList();
             peers.clear();
             peers.addAll(peerList.getDeviceList());
-
-            // If an AdapterView is backed by this data, notify it
-            // of the change.  For instance, if you have a ListView of available
-            // peers, trigger an update.
             mActivity.getListAdapter().notifyDataSetChanged();
+            
             if (peers.size() == 0) {
             	Toast.makeText(mActivity.getApplicationContext(), "No friends. :(", Toast.LENGTH_SHORT).show();
             }
@@ -107,21 +103,20 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 						public void onConnectionInfoAvailable(WifiP2pInfo info) {
 							// Get group owner IP address
 							String ownerAddr = info.groupOwnerAddress.getHostAddress();
-							mActivity.setServerAddress(ownerAddr);
 							Toast.makeText(context, ownerAddr, Toast.LENGTH_LONG).show();
 							
 							mManager.requestPeers(mChannel, peerListListener);
 							
 							if (info.groupFormed && info.isGroupOwner) {
 								Toast.makeText(context, "I AM GROUP OWNER!!", Toast.LENGTH_SHORT).show();
-								mActivity.setIsServer();
-								mActivity.createServerAsyncTask();
+								mActivity.setIsGroupOwner(true);
+								mActivity.createServerThread();
 							} else if (info.groupFormed) {
 								Toast.makeText(context, "...I'm not the group owner... *sniffle*", Toast.LENGTH_SHORT).show();
+								mActivity.setIsGroupOwner(false);
+								mActivity.setPeerAddress(ownerAddr);
+								mActivity.createServerThread();
 							}
-							
-							// Either way, create server and client threads in MainActivity
-							// TODO: ^ that
 						}
 					});
 				} else {

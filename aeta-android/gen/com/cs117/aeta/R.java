@@ -31,6 +31,8 @@ public final class R {
         public static final int create_group=0x7f040003;
         public static final int disconnect=0x7f040004;
         public static final int discover_peers=0x7f040001;
+        public static final int instructions=0x7f040006;
         public static final int play=0x7f040002;
+        public static final int test=0x7f040005;
     }
 }

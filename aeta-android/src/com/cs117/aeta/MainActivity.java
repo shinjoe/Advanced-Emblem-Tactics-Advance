@@ -1,10 +1,5 @@
 package com.cs117.aeta;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -49,41 +44,32 @@ public class MainActivity extends AndroidApplication {
 	private IntentFilter mIntentFilter;
 	private WifiP2pDevice mPeer;
 	
-	private boolean mWifiP2pEnabled;
+	private boolean mWifiP2pEnabled = false;
 	
 	private ArrayList<WifiP2pDevice> mPeerArrayList;
 	private ArrayAdapter<WifiP2pDevice> mPeerAdapter;
 	
-	private ActionResolverAndroid mResolver;
+	//private ActionResolverAndroid mResolver;
 	
-	private boolean mIsServer;
-	private String mServerAddress;
-	private ServerAsyncTask mServerAsyncTask;
-	private ClientAsyncTask mClientAsyncTask;
+	private boolean mIsGroupOwner = false;
+
+	private String mPeerAddress = "";
+	
+	private Thread mServerThread = null;
+	private Thread mClientThread = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         
-        mIsServer = false;        
-        mWifiP2pEnabled = false;
-        
         // Create handler to call native Android APIs
-        mResolver = new ActionResolverAndroid(this);
+        // mResolver = new ActionResolverAndroid(this);
         
         mIntentFilter = new IntentFilter();
-        
-        // Indicates change in Wi-Fi P2P status.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-             
-        // Indicates change in list of available peers.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-             
-        // Indicates change in Wi-Fi P2P connectivity.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-             
-        // Indicates change in device's details.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         
         // Create Wi-Fi P2P manager, channel, and broadcast receiver
@@ -105,7 +91,7 @@ public class MainActivity extends AndroidApplication {
 					
 					@Override
 					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Try again.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Try again. " + reason, Toast.LENGTH_SHORT).show();
 					}
 				});
 			}
@@ -137,7 +123,7 @@ public class MainActivity extends AndroidApplication {
 					
 					@Override
 					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "No group for you!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "No group for you! " + reason, Toast.LENGTH_SHORT).show();
 					}
 				
 				});
@@ -158,24 +144,28 @@ public class MainActivity extends AndroidApplication {
 					
 					@Override
 					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Nope, you're staying here.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Nope, you're staying here. " + reason, Toast.LENGTH_SHORT).show();
 					}
 					
 				});
 				mPeer = null;
 				mPeerArrayList.clear();
 				mPeerAdapter.notifyDataSetChanged();
+				if (mServerThread != null) {
+					mServerThread.interrupt();
+					mServerThread = null;
+				}
 			}
 		});
         
+        // for testing
         mEditText = (EditText) findViewById(R.id.editText1);
         mTestButton = (Button) findViewById(R.id.test_button);
         mTestButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if (!mIsServer)
-					createClientAsyncTask(mEditText.getText().toString());
+					createClientThread(mEditText.getText().toString());
 			}
 		});
         
@@ -205,7 +195,7 @@ public class MainActivity extends AndroidApplication {
 
 					@Override
 					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Herp a derp, connection failed.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Herp a derp, connection failed. " + reason, Toast.LENGTH_SHORT).show();
 					}
 					
 				});		
@@ -231,22 +221,34 @@ public class MainActivity extends AndroidApplication {
 		mWifiP2pEnabled = enabled;
 	}
 	
-	public void setServerAddress(String serverAddress) {
-		mServerAddress = serverAddress;
+	public void setPeerAddress(String peerAddress) {
+		mPeerAddress = peerAddress;
 	}
 	
-	public void setIsServer() {
-		mIsServer = true;
+	public void setIsGroupOwner(boolean isOwner) {
+		mIsGroupOwner = isOwner;
 	}
 	
-	public void createServerAsyncTask() {
-		mServerAsyncTask = new ServerAsyncTask(this);
-		mServerAsyncTask.execute((Void[])null);
+	public boolean isGroupOwner() {
+		return mIsGroupOwner;
 	}
 	
-	public void createClientAsyncTask(String msg) {
-		mClientAsyncTask = new ClientAsyncTask(mServerAddress, msg);
-		mClientAsyncTask.execute((Void[])null);
+	// Creates listening threads, always on
+	public void createServerThread() {
+		if (mIsGroupOwner)
+			mServerThread = new ServerThread(this, SERVER_PORT);
+		else
+			mServerThread = new ServerThread(this, CLIENT_PORT);
+		new Thread(mServerThread).start();
+	}
+	
+	// Creates sending threads, return after sending
+	public void createClientThread(String msg) {
+		if (mIsGroupOwner)
+			mClientThread = new ClientThread(this, mPeerAddress, msg, CLIENT_PORT);
+		else
+			mClientThread = new ClientThread(this, mPeerAddress, msg, SERVER_PORT);
+		new Thread(mClientThread).start();
 	}
 	
     @Override
@@ -259,5 +261,9 @@ public class MainActivity extends AndroidApplication {
     public void onPause() {
     	super.onPause();
     	unregisterReceiver(mReceiver);
+    	if (mServerThread != null) {
+    		mServerThread.interrupt();
+    		mServerThread = null;
+    	}
     }
 }

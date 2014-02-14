@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -12,14 +13,18 @@
 
         <Button
             android:id="@+id/discover_button"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
             android:text="@string/discover_peers" />
 
         <Button
             android:id="@+id/group_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle"
             android:layout_gravity="center"
             android:text="@string/create_group" />
 
@@ -27,19 +32,22 @@
             android:id="@+id/play_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle"
             android:text="@string/play" />
 
         <Button
             android:id="@+id/disconnect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle"
             android:text="@string/disconnect" />
 
         <Button
             android:id="@+id/test_button"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test" />
+            android:text="@string/test" />
 
     </LinearLayout>
 
@@ -49,7 +57,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:text="Instructions: 0) Press Disconnect, 1) Press Discover Peers on both devices, 2) Press Create Group on one device, 4) Press on list item on other device to connect, 5) Click OK/Accept on first device, 6) Hope it actually works (status 0), 7) Type something on client and hit Test, 8) Hope this works, too" >
+        android:text="@string/instructions" >
 
         <requestFocus />
     </EditText>
