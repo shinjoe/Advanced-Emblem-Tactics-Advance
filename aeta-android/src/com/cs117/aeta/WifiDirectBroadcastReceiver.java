@@ -87,7 +87,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 				NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 				
 				if (networkInfo.isAvailable()) {
-					Toast.makeText(context, "Well, there's something there...", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "Well, there's someone there...", Toast.LENGTH_SHORT).show();
 				}
 				
 				if (networkInfo.isConnectedOrConnecting()) {
@@ -103,7 +103,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 						public void onConnectionInfoAvailable(WifiP2pInfo info) {
 							// Get group owner IP address
 							String ownerAddr = info.groupOwnerAddress.getHostAddress();
-							Toast.makeText(context, ownerAddr, Toast.LENGTH_LONG).show();
+							Toast.makeText(context, "owner IP: " + ownerAddr, Toast.LENGTH_LONG).show();
 							
 							mManager.requestPeers(mChannel, peerListListener);
 							
@@ -120,7 +120,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 						}
 					});
 				} else {
-					Toast.makeText(context, "Disconnected...", Toast.LENGTH_LONG).show();
+					Toast.makeText(context, "DC'd...", Toast.LENGTH_LONG).show();
 				}
 			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

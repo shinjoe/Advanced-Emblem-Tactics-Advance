@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ServerThread extends Thread {
 
@@ -32,6 +33,15 @@ public class ServerThread extends Thread {
 					mPeerAddress = clientSocket.getInetAddress().getHostAddress();
 					mActivity.setPeerAddress(mPeerAddress);
 				}
+				
+				mActivity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(mActivity.getApplicationContext(), "peer IP: " + mPeerAddress, Toast.LENGTH_SHORT).show();
+					}
+					
+				});
 				
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				mFromClient = in.readLine();
