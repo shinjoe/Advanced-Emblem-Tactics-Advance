@@ -26,6 +26,12 @@ public class Game implements ApplicationListener {
 	
 	private OrthographicCamera cam;
 	
+	private ActionResolver mActionResolver;
+	
+	public Game(ActionResolver actionResolver) {
+		this.mActionResolver = actionResolver;
+	}
+	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
@@ -76,6 +82,11 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
+			
+			// Send coordinates to peer
+			// ISSUE: coordinates getting sent multiple times. must fix eventually...
+			mActionResolver.sendCoordinates("Touch/Click detected at X: " + touchPos.x + ", Y: " + touchPos.y);
+			
 			TileMap[(int) (touchPos.y / BLOCK_HEIGHT)][(int) (touchPos.x / BLOCK_WIDTH)] = 2;
 		}
 	}

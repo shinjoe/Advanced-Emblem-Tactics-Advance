@@ -63,7 +63,10 @@ public class ServerThread extends Thread {
 
 			@Override
 			public void run() {
-				((EditText)mActivity.findViewById(R.id.editText1)).setText(mFromClient);
+				if (mFromClient.contains("Touch/Click"))
+					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_LONG).show();
+				else
+					((EditText)mActivity.findViewById(R.id.editText1)).setText(mFromClient);
 			}
 			
 		});

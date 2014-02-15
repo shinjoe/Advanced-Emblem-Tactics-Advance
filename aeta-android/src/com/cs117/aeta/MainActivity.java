@@ -51,7 +51,7 @@ public class MainActivity extends AndroidApplication {
 	private ArrayList<WifiP2pDevice> mPeerArrayList;
 	private ArrayAdapter<WifiP2pDevice> mPeerAdapter;
 	
-	//private ActionResolverAndroid mResolver;
+	private ActionResolverAndroid mResolver;
 	
 	private boolean mIsGroupOwner = false;
 
@@ -66,7 +66,7 @@ public class MainActivity extends AndroidApplication {
         setContentView(R.layout.menu);
         
         // Create handler to call native Android APIs
-        // mResolver = new ActionResolverAndroid(this);
+        mResolver = new ActionResolverAndroid(this);
         
         // Create intent filter for broadcast receiver
         mIntentFilter = new IntentFilter();
@@ -235,7 +235,7 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        mGameView = initializeForView(new Game(), cfg);
+        mGameView = initializeForView(new Game(mResolver), cfg);
     }
 
 	public ArrayAdapter<WifiP2pDevice> getListAdapter() {

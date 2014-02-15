@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class Main {
+	
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "aeta";
@@ -11,6 +12,8 @@ public class Main {
 		cfg.width = 500;
 		cfg.height = 400;
 		
-		new LwjglApplication(new Game(), cfg);
+		DesktopActionResolver actionResolver = new DesktopActionResolver();
+		
+		new LwjglApplication(new Game(actionResolver), cfg);
 	}
 }

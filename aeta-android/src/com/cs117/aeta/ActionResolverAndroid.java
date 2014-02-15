@@ -10,16 +10,14 @@ package com.cs117.aeta;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-
 public class ActionResolverAndroid implements ActionResolver {
 	
 	private Handler mUiThread;
-	private AndroidApplication mAppContext;
+	private MainActivity mActivity;
 	
-	public ActionResolverAndroid(AndroidApplication appContext) {
+	public ActionResolverAndroid(MainActivity activity) {
 		mUiThread = new Handler();
-		this.mAppContext = appContext;
+		this.mActivity = activity;
 	}
 
 	@Override
@@ -28,7 +26,7 @@ public class ActionResolverAndroid implements ActionResolver {
 
 			@Override
 			public void run() {
-				Toast.makeText(mAppContext, toastMessage, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mActivity.getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
 			}
 			
 		});		
@@ -40,9 +38,14 @@ public class ActionResolverAndroid implements ActionResolver {
 
 			@Override
 			public void run() {
-				Toast.makeText(mAppContext, toastMessage, Toast.LENGTH_LONG).show();
+				Toast.makeText(mActivity.getApplicationContext(), toastMessage, Toast.LENGTH_LONG).show();
 			}
 			
 		});	
+	}
+	
+	@Override
+	public void sendCoordinates(CharSequence coordinates) {
+		mActivity.createClientThread(coordinates.toString());
 	}
 }
