@@ -1,4 +1,4 @@
-package com.cs117.tile_placeable;
+package com.cs117.tile;
 
 import com.cs117.aeta.Game;
 
