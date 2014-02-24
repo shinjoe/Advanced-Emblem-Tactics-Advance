@@ -113,7 +113,7 @@ public class Game implements ApplicationListener {
 			
 			// Send coordinates to peer
 			// ISSUE: coordinates getting sent multiple times. must fix eventually...
-			mActionResolver.sendCoordinates("Touch/Click detected at X: " + touchPos.x + ", Y: " + touchPos.y);
+			//mActionResolver.sendCoordinates("Touch/Click detected at X: " + touchPos.x + ", Y: " + touchPos.y);
 			
 		}
 	}
