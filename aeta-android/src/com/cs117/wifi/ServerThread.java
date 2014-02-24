@@ -1,4 +1,4 @@
-package com.cs117.aeta;
+package com.cs117.wifi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,9 @@ import java.net.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.cs117.aeta.Game;
+import com.cs117.aeta.R;
 
 import android.widget.EditText;
 import android.widget.Toast;

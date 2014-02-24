@@ -1,4 +1,4 @@
-package com.cs117.aeta;
+package com.cs117.wifi;
 
 /***
  *
@@ -9,6 +9,9 @@ package com.cs117.aeta;
  */
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.cs117.connection.ActionResolver;
+
 
 import android.os.Handler;
 import android.widget.Toast;

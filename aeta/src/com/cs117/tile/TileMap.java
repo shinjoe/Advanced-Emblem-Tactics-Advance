@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.cs117.aeta.ActionResolver;
 import com.cs117.aeta.Game;
+import com.cs117.connection.ActionResolver;
 import com.cs117.units.Infantry;
 import com.cs117.units.Tank;
 import com.cs117.units.Unit;
+
 
 public class TileMap {
 	private static final int IMMEDIATE_WALKABLE = 8;

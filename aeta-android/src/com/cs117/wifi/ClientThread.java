@@ -1,4 +1,4 @@
-package com.cs117.aeta;
+package com.cs117.wifi;
 
 import java.io.IOException;
 import java.io.PrintStream;

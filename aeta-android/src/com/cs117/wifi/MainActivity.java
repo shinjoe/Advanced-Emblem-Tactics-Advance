@@ -1,4 +1,4 @@
-package com.cs117.aeta;
+package com.cs117.wifi;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,8 @@ import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.cs117.aeta.Game;
+import com.cs117.aeta.R;
 
 public class MainActivity extends AndroidApplication {
 	

@@ -1,4 +1,4 @@
-package com.cs117.aeta;
+package com.cs117.connection;
 
 public interface ActionResolver {
 	public void showShortToast(CharSequence toastMessage);
