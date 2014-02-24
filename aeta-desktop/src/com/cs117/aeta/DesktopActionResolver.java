@@ -15,7 +15,7 @@ public class DesktopActionResolver implements ActionResolver {
 	}
 
 	@Override
-	public void sendCoordinates(CharSequence coordinates) {
+	public void sendCoordinates(int prevX, int prevY, int newX, int newY) {
 		// TODO Auto-generated method stub
 		
 	}
