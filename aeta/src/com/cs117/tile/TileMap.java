@@ -3,9 +3,6 @@ package com.cs117.tile;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import units.Infantry;
-import units.Tank;
-import units.Unit;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.cs117.aeta.ActionResolver;
 import com.cs117.aeta.Game;
+import com.cs117.units.Infantry;
+import com.cs117.units.Tank;
+import com.cs117.units.Unit;
 
 public class TileMap {
 	private static final int IMMEDIATE_WALKABLE = 8;
@@ -124,6 +124,8 @@ public class TileMap {
 					updateUnit(xCoord, yCoord, prevX, prevY);
 					System.out.println("removing : ");
 					System.out.println(c);
+					// sync with other phone for now
+					synchronize(xCoord, yCoord, prevX, prevY);
 					walkable = null;
 					break;
 				}
@@ -150,8 +152,7 @@ public class TileMap {
 		for (Coordinate c : unitMap.keySet()) {
 			Unit curUnit = unitMap.get(c);
 			font.draw(spriteBatch, 
-					 //curUnit.getName(), 
-					"INF",
+					 curUnit.getName(), 
 					 c.getX() * Game.BLOCK_WIDTH + Game.UNIT_TEXT_X_OFFSET, 
 					 (c.getY() + 1) * Game.BLOCK_HEIGHT - Game.UNIT_TEXT_Y_OFFSET);
 		}

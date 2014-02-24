@@ -102,7 +102,6 @@ public class Game implements ApplicationListener {
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
 			tilemap.moveSelectedUnit(xCoord, yCoord, prevX, prevY);
-			tilemap.synchronize(xCoord, yCoord, prevX, prevY);
 			if (ui.buttonPressed(prevX, prevY)) {
 				tilemap.getWalkableTerrain();
 			}
@@ -111,11 +110,6 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
-			
-			// Send coordinates to peer
-			// ISSUE: coordinates getting sent multiple times. must fix eventually...
-			//mActionResolver.sendCoordinates("Touch/Click detected at X: " + touchPos.x + ", Y: " + touchPos.y);
-			
 		}
 	}
 	

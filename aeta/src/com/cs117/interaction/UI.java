@@ -2,7 +2,6 @@ package com.cs117.interaction;
 
 import java.util.HashMap;
 
-import units.Unit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.cs117.aeta.Game;
 import com.cs117.tile.Coordinate;
 import com.cs117.tile.TileMap;
+import com.cs117.units.Unit;
 
 public class UI {
 	
