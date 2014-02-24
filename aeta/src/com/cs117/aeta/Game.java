@@ -36,6 +36,11 @@ public class Game implements ApplicationListener {
 	private Vector3 touchPos;
 	
 	private BitmapFont font;
+	private ActionResolver mActionResolver;
+	
+	public Game(ActionResolver actionResolver) {
+		this.mActionResolver = actionResolver;
+	}
 	
 	public void create() {
 		WIDTH = Gdx.graphics.getWidth();
@@ -101,6 +106,14 @@ public class Game implements ApplicationListener {
 				tilemap.getWalkableTerrain();
 			}
 			
+			
+			System.out.println("Touch/Click detected");
+			System.out.println("X " + touchPos.x);
+			System.out.println("Y " + touchPos.y);
+			
+			// Send coordinates to peer
+			// ISSUE: coordinates getting sent multiple times. must fix eventually...
+			mActionResolver.sendCoordinates("Touch/Click detected at X: " + touchPos.x + ", Y: " + touchPos.y);
 			
 		}
 	}

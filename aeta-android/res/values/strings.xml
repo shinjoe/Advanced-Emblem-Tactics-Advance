@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My LibGDX Game</string>
+    <string name="app_name">Advanced Emblem Tactics Advance</string>
+    <string name="discover_peers">Discover Peers</string>
+    <string name="play">Play</string>
+    <string name="create_group">Create Group</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="test">Test</string>
+    <string name="instructions">Instructions: 0) Press Disconnect, 1) Press Discover Peers on both devices, 2) Press Create Group on one device, 4) Press on list item on other device to connect, 5) Click OK/Accept on first device, 6) Hope it actually works, 7) Type something on client and hit Test, 8) Hope you see it on the other side</string>
 </resources>
