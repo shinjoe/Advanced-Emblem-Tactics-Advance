@@ -7,6 +7,9 @@ package com.cs117.aeta;
  * @author Octagen Lab
  * 
  */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -45,7 +48,20 @@ public class ActionResolverAndroid implements ActionResolver {
 	}
 	
 	@Override
-	public void sendCoordinates(CharSequence coordinates) {
-		mActivity.createClientThread(coordinates.toString());
+	public void sendCoordinates(int prevX, int prevY, int newX, int newY) {
+		
+		JSONObject coords = new JSONObject();
+		try{
+			coords.put("inGame", true);
+			coords.put("prevX", prevX);
+			coords.put("prevY", prevY);
+			coords.put("newX", newX);
+			coords.put("newY", newY);
+		}
+		catch(JSONException e) {
+			e.printStackTrace();
+			System.err.println("send coord failure");
+		}
+		mActivity.createClientThread(coords.toString());
 	}
 }

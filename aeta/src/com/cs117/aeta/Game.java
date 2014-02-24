@@ -61,7 +61,7 @@ public class Game implements ApplicationListener {
 		cam.translate(WIDTH/2, HEIGHT/2);
 		cam.update();		
 		
-		tilemap = new TileMap(shapeRenderer, spriteBatch, font);
+		tilemap = new TileMap(shapeRenderer, spriteBatch, font, mActionResolver);
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
 	}
 	
@@ -102,6 +102,7 @@ public class Game implements ApplicationListener {
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
 			tilemap.moveSelectedUnit(xCoord, yCoord, prevX, prevY);
+			tilemap.synchronize(xCoord, yCoord, prevX, prevY);
 			if (ui.buttonPressed(prevX, prevY)) {
 				tilemap.getWalkableTerrain();
 			}

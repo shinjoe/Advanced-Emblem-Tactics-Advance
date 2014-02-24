@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.cs117.aeta.ActionResolver;
 import com.cs117.aeta.Game;
 
 public class TileMap {
@@ -23,9 +24,15 @@ public class TileMap {
 	private HashMap<Coordinate, Unit> unitMap;
     private ArrayList<Coordinate> walkable;
     private BitmapFont font;
+    
+    private ActionResolver AR;
     	
 
-	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font) {
+	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font,
+					ActionResolver ar) {
+		
+		AR = ar;
+		
 		terrain = new int[][] { 
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 				{0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -114,27 +121,37 @@ public class TileMap {
 		if (walkable != null) {
 			for (Coordinate c : walkable) {
 				if (c.equals(selectedTile)) {
-					Coordinate prevCoord = new Coordinate(prevX, prevY);
-					Unit curUnit = unitMap.get(prevCoord);
+					updateUnit(xCoord, yCoord, prevX, prevY);
 					System.out.println("removing : ");
 					System.out.println(c);
-					unitMap.remove(prevCoord);
-					unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
 					walkable = null;
 					break;
 				}
 			}
+			
 			// no tile selected, therefore effectively a cancel
 			walkable = null;
 			
 		}
 	}
 	
+	public void synchronize(int xCoord, int yCoord, int prevX, int prevY){
+		AR.sendCoordinates(prevX, prevY, xCoord, yCoord);
+	}
+	
+	public void updateUnit(int xCoord, int yCoord, int prevX, int prevY){
+		Coordinate prevCoord = new Coordinate(prevX, prevY);
+		Unit curUnit = unitMap.get(prevCoord);
+		unitMap.remove(prevCoord);
+		unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
+	}
+	
 	public void __DEBUG_drawUnitString() {
 		for (Coordinate c : unitMap.keySet()) {
 			Unit curUnit = unitMap.get(c);
 			font.draw(spriteBatch, 
-					 curUnit.getName(), 
+					 //curUnit.getName(), 
+					"INF",
 					 c.getX() * Game.BLOCK_WIDTH + Game.UNIT_TEXT_X_OFFSET, 
 					 (c.getY() + 1) * Game.BLOCK_HEIGHT - Game.UNIT_TEXT_Y_OFFSET);
 		}

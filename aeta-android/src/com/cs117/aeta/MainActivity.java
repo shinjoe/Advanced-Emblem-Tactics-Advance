@@ -54,8 +54,11 @@ public class MainActivity extends AndroidApplication {
 	private ActionResolverAndroid mResolver;
 	
 	private boolean mIsGroupOwner = false;
+	private boolean mInGame = false;
 
 	private String mPeerAddress = "";
+	
+	private Game mGame;
 	
 	private Thread mServerThread = null;
 	private Thread mClientThread = null;
@@ -107,7 +110,10 @@ public class MainActivity extends AndroidApplication {
 			@Override
 			public void onClick(View v) {
 				if (mWifiP2pEnabled)
+				{
+					mInGame = true;
 					setContentView(mGameView);
+				}
 				else
 					Toast.makeText(getApplicationContext(), "Nope. Turn on Wifi Direct first. ^_^", Toast.LENGTH_SHORT).show();
 			}
@@ -235,9 +241,14 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        mGameView = initializeForView(new Game(mResolver), cfg);
+        mGame = new Game(mResolver);
+        mGameView = initializeForView(mGame, cfg);
     }
 
+    public Game getGame(){
+    	return mGame;
+    }
+    
 	public ArrayAdapter<WifiP2pDevice> getListAdapter() {
 		return mPeerAdapter;
 	}
@@ -284,6 +295,10 @@ public class MainActivity extends AndroidApplication {
     public void onResume() {
     	super.onResume();
     	registerReceiver(mReceiver, mIntentFilter);
+    }
+    
+    public boolean getInGame() {
+    	return mInGame;
     }
     
     @Override

@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -63,8 +66,25 @@ public class ServerThread extends Thread {
 
 			@Override
 			public void run() {
-				if (mFromClient.contains("Touch/Click"))
+				if (mActivity.getInGame())
+				{	
+					JSONObject fromClient = null;
+					try
+					{	
+						fromClient = new JSONObject(mFromClient);
+						Game curGame = mActivity.getGame();
+						curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
+													fromClient.getInt("prevX"), fromClient.getInt("prevY"));
+					}
+					catch(JSONException e) {
+						e.printStackTrace();
+						System.err.println("receive coord failure");
+					}
+					
+					
+					
 					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_LONG).show();
+				}
 				else
 					((EditText)mActivity.findViewById(R.id.editText1)).setText(mFromClient);
 			}
