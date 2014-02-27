@@ -69,23 +69,6 @@ public class TileMap {
 		walkable = null;
 		this.font = font;
 	}
-
-	public void drawTerrain() {
-		for (int i = terrain.length - 1; i > -1; i--) {
-			for (int j = 0; j < terrain[0].length; j++) {
-				Color curColor = Color.BLACK;
-				if (terrain[i][j] == 1)
-					curColor = Color.WHITE;
-				else if (terrain[i][j] == 2)
-					curColor = Color.GRAY;
-				shapeRenderer.setColor(curColor);
-				shapeRenderer.rect(j * Game.BLOCK_WIDTH + Game.TILE_OFFSET,  
-						           Game.BLOCK_HEIGHT * (terrain.length - 1) - i * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
-						           Game.BLOCK_WIDTH  - Game.TILE_OFFSET, 
-						           Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
-			}
-		}
-	}
 	
 	public void drawTerrainTexture() {
 		Texture curTexture = null;
@@ -100,8 +83,6 @@ public class TileMap {
 						           Game.BLOCK_HEIGHT * (terrain.length - 1) - i * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
 						           Game.BLOCK_WIDTH  - Game.TILE_OFFSET, 
 						           Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
-				
-			
 			}
 		}
 	}

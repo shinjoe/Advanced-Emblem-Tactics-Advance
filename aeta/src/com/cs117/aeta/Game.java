@@ -107,7 +107,6 @@ public class Game implements ApplicationListener {
 				tilemap.getWalkableTerrain();
 			}
 			
-			
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
