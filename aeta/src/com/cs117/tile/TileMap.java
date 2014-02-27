@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -25,6 +27,9 @@ public class TileMap {
 	private HashMap<Coordinate, Unit> unitMap;
     private ArrayList<Coordinate> walkable;
     private BitmapFont font;
+    private Texture grassTexture;
+    private Texture blueOverlay;
+    private Texture mtnTexture;
     
     private ActionResolver AR;
     	
@@ -48,6 +53,9 @@ public class TileMap {
 		this.shapeRenderer = shapeRenderer;
 		this.spriteBatch = spriteBatch;
 		selectedTile = new Coordinate(-1, -1);
+		grassTexture = new Texture(Gdx.files.internal("gfx/grass.png"));
+		blueOverlay = new Texture(Gdx.files.internal("gfx/blueOverlay.png"));
+		mtnTexture = new Texture(Gdx.files.internal("gfx/mtn.png"));
 		
 		unitMap = new HashMap<Coordinate, Unit>();
 		// put an infantry unit at (0, 0)
@@ -75,6 +83,25 @@ public class TileMap {
 						           Game.BLOCK_HEIGHT * (terrain.length - 1) - i * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
 						           Game.BLOCK_WIDTH  - Game.TILE_OFFSET, 
 						           Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+			}
+		}
+	}
+	
+	public void drawTerrainTexture() {
+		Texture curTexture = null;
+		for (int i = terrain.length - 1; i > -1; i--) {
+			for (int j = 0; j < terrain[0].length; j++) {
+				if (terrain[i][j] == 1) 
+					curTexture = grassTexture;
+				else if (terrain[i][j] == 0) 
+					curTexture = mtnTexture;
+						
+				spriteBatch.draw(curTexture, j * Game.BLOCK_WIDTH + Game.TILE_OFFSET,  
+						           Game.BLOCK_HEIGHT * (terrain.length - 1) - i * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
+						           Game.BLOCK_WIDTH  - Game.TILE_OFFSET, 
+						           Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+				
+			
 			}
 		}
 	}
@@ -108,8 +135,7 @@ public class TileMap {
 	public void drawWalkable() {
 		if (walkable != null) {
 			for (Coordinate c : walkable) {
-				shapeRenderer.setColor(Color.BLUE);
-				shapeRenderer.rect(c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET,
+				spriteBatch.draw(blueOverlay, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET,
 								   c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET,
 								   Game.BLOCK_WIDTH - Game.TILE_OFFSET,
 								   Game.BLOCK_HEIGHT - Game.TILE_OFFSET);

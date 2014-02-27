@@ -69,8 +69,8 @@ public class Game implements ApplicationListener {
 	
 	
 	public void render() {
-		// clear the screen to white
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		// clear the screen to light green, this forms the tile outline
+		Gdx.gl.glClearColor(0.145f, 0.776f, 0.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//stage.act();
@@ -80,12 +80,12 @@ public class Game implements ApplicationListener {
 		shapeRenderer.begin(ShapeType.Filled);
 		// draw objects on tilemap
 		tilemap.drawSelectedTile();
-		tilemap.drawTerrain();
 		tilemap.drawUnits();
-		tilemap.drawWalkable();
 		shapeRenderer.end();
 		
 		spriteBatch.begin();
+		tilemap.drawTerrainTexture();
+		tilemap.drawWalkable();
 		tilemap.__DEBUG_drawUnitString();
 		spriteBatch.end();
 		
