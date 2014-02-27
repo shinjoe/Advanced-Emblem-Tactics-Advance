@@ -122,16 +122,6 @@ public class TileMap {
 		selectedTile.setY(yCoord);
 	}
 	
-	public void drawUnits() {
-		for (Coordinate c : unitMap.keySet()) {
-			shapeRenderer.setColor(Color.CYAN);
-			shapeRenderer.rect(c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
-					           c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
-					           Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
-					           Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
-		}
-	}
-	
 	public void drawWalkable() {
 		if (walkable != null) {
 			for (Coordinate c : walkable) {

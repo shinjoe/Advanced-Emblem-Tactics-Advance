@@ -80,7 +80,6 @@ public class Game implements ApplicationListener {
 		shapeRenderer.begin(ShapeType.Filled);
 		// draw objects on tilemap
 		tilemap.drawSelectedTile();
-		tilemap.drawUnits();
 		shapeRenderer.end();
 		
 		spriteBatch.begin();
