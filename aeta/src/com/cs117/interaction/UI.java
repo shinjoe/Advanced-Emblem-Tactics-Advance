@@ -38,7 +38,7 @@ public class UI {
 		stage.addActor(moveBtn);
 		moveBtn.setVisible(false);
 		moveBtn.setWidth(Game.BLOCK_WIDTH);
-		moveBtn.setHeight(Game.BLOCK_HEIGHT/2);
+		moveBtn.setHeight(Game.BLOCK_HEIGHT);
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
 		unitMap = tilemap.getUnitMap();
@@ -56,10 +56,10 @@ public class UI {
 			float quad_y_offset = 0;
 			if (quadrant == 1) {
 				quad_x_offset = -1 * moveBtn.getWidth() - Game.TILE_OFFSET;
-				quad_y_offset = moveBtn.getHeight() + Game.TILE_OFFSET;
+				quad_y_offset = Game.TILE_OFFSET;
 			} else if (quadrant == 2) {
 				quad_x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
-				quad_y_offset = moveBtn.getHeight() + Game.TILE_OFFSET;
+				quad_y_offset = Game.TILE_OFFSET;
 			} else if (quadrant == 3) {
 				quad_x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
 				quad_y_offset = moveBtn.getHeight();

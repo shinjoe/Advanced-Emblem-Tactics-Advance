@@ -59,12 +59,12 @@ public class TileMap {
 		
 		unitMap = new HashMap<Coordinate, Unit>();
 		// put an infantry unit at (0, 0)
-		unitMap.put(new Coordinate(0, 0), new Infantry(10));
+		unitMap.put(new Coordinate(0, 0), new Infantry());
 		// put a tank at (5, 1)
-		unitMap.put(new Coordinate(5, 1), new Tank(10));
-		unitMap.put(new Coordinate(0, 7), new Tank(10));
-		unitMap.put(new Coordinate(9, 7), new Infantry(10));
-		unitMap.put(new Coordinate(9, 0), new Infantry(10));
+		unitMap.put(new Coordinate(5, 1), new Tank());
+		unitMap.put(new Coordinate(0, 7), new Tank());
+		unitMap.put(new Coordinate(9, 7), new Infantry());
+		unitMap.put(new Coordinate(9, 0), new Infantry());
 		
 		walkable = null;
 		this.font = font;
