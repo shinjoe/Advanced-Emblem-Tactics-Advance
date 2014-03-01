@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,9 +22,12 @@ public class UI {
 	private TextureAtlas buttonAtlas;
 	private TextButtonStyle buttonStyle;
 	private TextButton moveBtn;
+	private TextButton atkBtn;
 	private Skin skin;
 	private Coordinate selectedTile;
 	private HashMap<Coordinate, Unit> unitMap;
+	private Vector2 moveOffset;
+	private Vector2 atkOffset;
 	
 	public UI(int WIDTH, int HEIGHT, BitmapFont font, TileMap tilemap) {
 		stage = new Stage(WIDTH, HEIGHT, true);
@@ -35,13 +39,20 @@ public class UI {
 		buttonStyle.down = skin.getDrawable("buttonpressed");
 		buttonStyle.font = font;	
 		moveBtn = new TextButton("Move", buttonStyle);
+		atkBtn = new TextButton("Attack", buttonStyle);
 		stage.addActor(moveBtn);
+		stage.addActor(atkBtn);
 		moveBtn.setVisible(false);
 		moveBtn.setWidth(Game.BLOCK_WIDTH);
 		moveBtn.setHeight(Game.BLOCK_HEIGHT);
+		atkBtn.setVisible(false);
+		atkBtn.setWidth(Game.BLOCK_WIDTH);
+		atkBtn.setHeight(Game.BLOCK_HEIGHT);
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
 		unitMap = tilemap.getUnitMap();
+		moveOffset = new Vector2();
+		atkOffset = new Vector2();
 	}
 
 	public void draw() {
@@ -52,29 +63,53 @@ public class UI {
 		// show UI if a coordinate with a unit is pressed
 		if (unitMap.containsKey(selectedTile)) {
 			int quadrant = selectedTile.getQuadrant();
-			float quad_x_offset = 0;
-			float quad_y_offset = 0;
-			if (quadrant == 1) {
-				quad_x_offset = -1 * moveBtn.getWidth() - Game.TILE_OFFSET;
-				quad_y_offset = Game.TILE_OFFSET;
-			} else if (quadrant == 2) {
-				quad_x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
-				quad_y_offset = Game.TILE_OFFSET;
-			} else if (quadrant == 3) {
-				quad_x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
-				quad_y_offset = moveBtn.getHeight();
-			} else if (quadrant == 4) {
-				quad_x_offset = -1 * moveBtn.getWidth();
-				quad_y_offset = moveBtn.getHeight();
-			} else {
-				System.err.println("Unexpected Quadrant received...");
-			}
-			moveBtn.setX(xCoord * Game.BLOCK_WIDTH + quad_x_offset);
-			moveBtn.setY(yCoord * Game.BLOCK_HEIGHT + quad_y_offset);
+			
+			calculateMoveBtnOffset(quadrant);
+			moveBtn.setX(xCoord * Game.BLOCK_WIDTH  + moveOffset.x);
+			moveBtn.setY(yCoord * Game.BLOCK_HEIGHT + moveOffset.y);
 			moveBtn.setVisible(true);
+			
+			calculateAtkBtnOffset(quadrant);
+			atkBtn.setX(xCoord * Game.BLOCK_WIDTH + atkOffset.x);
+			atkBtn.setY(yCoord * Game.BLOCK_HEIGHT + atkOffset.y);
+			atkBtn.setVisible(true);
+			
 		} else {
 			moveBtn.setVisible(false);
+			atkBtn.setVisible(false);
 		}
+	}
+	
+	private void calculateAtkBtnOffset(int quadrant) {
+		atkOffset.set(moveOffset.x, 0);
+		if (quadrant == 1 || quadrant == 2) {
+			atkOffset.set(atkOffset.x, -1 * atkBtn.getHeight() - Game.TILE_OFFSET);
+		} else if (quadrant == 3 || quadrant == 4) {
+			atkOffset.set(atkOffset.x, -Game.TILE_OFFSET);
+		} else {
+			System.err.println("Unexpected Quadrant in calculateAtkBtnOffset");
+		}
+	}
+	
+	private void calculateMoveBtnOffset(int quadrant) {
+		float x_offset = 0;
+		float y_offset = 0;
+		if (quadrant == 1) {
+			x_offset = -1 * moveBtn.getWidth() - Game.TILE_OFFSET;
+			y_offset = Game.TILE_OFFSET;
+		} else if (quadrant == 2) {
+			x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
+			y_offset = Game.TILE_OFFSET;
+		} else if (quadrant == 3) {
+			x_offset = moveBtn.getWidth() + Game.TILE_OFFSET;
+			y_offset = moveBtn.getHeight();
+		} else if (quadrant == 4) {
+			x_offset = -1 * moveBtn.getWidth();
+			y_offset = moveBtn.getHeight();
+		} else {
+			System.err.println("Unexpected Quadrant received...");
+		}
+		moveOffset.set(x_offset, y_offset);
 	}
 	
 	public boolean buttonPressed(int prevX, int prevY) {
@@ -85,6 +120,15 @@ public class UI {
 			selectedTile.setY(prevY);
 			// clear button so that movement tiles can be shown
 			moveBtn.setVisible(false);
+			atkBtn.setVisible(false);
+			return true;
+		} else if (atkBtn.isPressed()) {
+			System.out.println("Game::Attack pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			// clear button so that movement tiles can be shown
+			moveBtn.setVisible(false);
+			atkBtn.setVisible(false);
 			return true;
 		}
 		return false;
