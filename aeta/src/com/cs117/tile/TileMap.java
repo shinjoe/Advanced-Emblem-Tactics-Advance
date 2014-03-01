@@ -133,6 +133,7 @@ public class TileMap {
 	public void attackWithSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
 		if (attackable != null) {
 			for (Coordinate c : attackable) {
+				// TODO: implement attacking logic
 				if (c.equals(selectedTile)) {
 					updateUnit(xCoord, yCoord, prevX, prevY);
 					System.out.println("atk");
