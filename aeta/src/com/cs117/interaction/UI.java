@@ -90,7 +90,7 @@ public class UI {
 			System.err.println("Unexpected Quadrant in calculateAtkBtnOffset");
 		}
 	}
-	
+
 	private void calculateMoveBtnOffset(int quadrant) {
 		float x_offset = 0;
 		float y_offset = 0;
@@ -112,7 +112,7 @@ public class UI {
 		moveOffset.set(x_offset, y_offset);
 	}
 	
-	public boolean buttonPressed(int prevX, int prevY) {
+	public boolean moveButtonPressed(int prevX, int prevY) {
 		// don't change what tile we're examining if a button is being pressed
 		if (moveBtn.isPressed()) {
 			System.out.println("Game::Move pressed");
@@ -122,7 +122,12 @@ public class UI {
 			moveBtn.setVisible(false);
 			atkBtn.setVisible(false);
 			return true;
-		} else if (atkBtn.isPressed()) {
+		} 
+		return false;
+	}
+	
+	public boolean atkButtonPressed(int prevX, int prevY) {
+		if (atkBtn.isPressed()) {
 			System.out.println("Game::Attack pressed");
 			selectedTile.setX(prevX);
 			selectedTile.setY(prevY);

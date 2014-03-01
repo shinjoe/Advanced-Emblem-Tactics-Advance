@@ -85,6 +85,7 @@ public class Game implements ApplicationListener {
 		spriteBatch.begin();
 		tilemap.drawTerrainTexture();
 		tilemap.drawWalkable();
+		tilemap.drawAttackable();
 		tilemap.__DEBUG_drawUnitString();
 		spriteBatch.end();
 		
@@ -103,8 +104,11 @@ public class Game implements ApplicationListener {
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
 			tilemap.moveSelectedUnit(xCoord, yCoord, prevX, prevY);
-			if (ui.buttonPressed(prevX, prevY)) {
+			tilemap.attackWithSelectedUnit(xCoord, yCoord, prevX, prevY);
+			if (ui.moveButtonPressed(prevX, prevY)) {
 				tilemap.getWalkableTerrain();
+			} else if (ui.atkButtonPressed(prevX, prevY)) {
+				tilemap.getAttackableTerrain();
 			}
 			
 			System.out.println("Touch/Click detected");
