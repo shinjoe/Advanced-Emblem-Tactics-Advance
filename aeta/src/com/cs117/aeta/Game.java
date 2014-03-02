@@ -2,6 +2,7 @@ package com.cs117.aeta;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -103,6 +104,12 @@ public class Game implements ApplicationListener {
 			int prevX = tilemap.getSelectedTile().getX();
 			int prevY = tilemap.getSelectedTile().getY();
 			
+		    if (ui.endTurnPressed(prevX, prevY)) {
+		    	// TODO: properly send msg over to other side saying "I'm done"
+				return;
+			}
+			
+			
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
 			
@@ -115,11 +122,13 @@ public class Game implements ApplicationListener {
 				tilemap.getWalkableTerrain();
 			} else if (ui.atkButtonPressed(prevX, prevY)) {
 				tilemap.getAttackableTerrain();
-			}
+			} 
 			
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
+		} else if (Gdx.input.isKeyPressed(Keys.MENU)) {
+			ui.showEndTurn();
 		}
 	}
 	

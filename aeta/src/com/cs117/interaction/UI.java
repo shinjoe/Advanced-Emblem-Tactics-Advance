@@ -18,12 +18,15 @@ import com.cs117.units.Unit;
 
 public class UI {
 	
+	private static final int END_TURN_MULTIPLIER = 4;
+	
 	private Stage stage;
 	
 	private TextureAtlas buttonAtlas;
 	private TextButtonStyle buttonStyle;
 	private TextButton moveBtn;
 	private TextButton atkBtn;
+	private TextButton endTurnBtn;
 	private Skin skin;
 	
 	private Coordinate selectedTile;
@@ -44,20 +47,27 @@ public class UI {
 		
 		moveBtn = new TextButton("Move", buttonStyle);
 		atkBtn = new TextButton("Attack", buttonStyle);
+		endTurnBtn = new TextButton("End Turn", buttonStyle);
 		stage.addActor(moveBtn);
 		stage.addActor(atkBtn);
+		stage.addActor(endTurnBtn);
 		moveBtn.setVisible(false);
 		moveBtn.setWidth(Game.BLOCK_WIDTH);
 		moveBtn.setHeight(Game.BLOCK_HEIGHT);
 		atkBtn.setVisible(false);
 		atkBtn.setWidth(Game.BLOCK_WIDTH);
 		atkBtn.setHeight(Game.BLOCK_HEIGHT);
+		endTurnBtn.setVisible(false);
+		endTurnBtn.setWidth(Game.BLOCK_WIDTH * END_TURN_MULTIPLIER);
+		endTurnBtn.setHeight(Game.BLOCK_HEIGHT * END_TURN_MULTIPLIER);
 		
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
 		unitMap = tilemap.getUnitMap();
 		moveOffset = new Vector2();
 		atkOffset = new Vector2();
+		endTurnBtn.setX(Game.NUM_COLS * Game.BLOCK_WIDTH / END_TURN_MULTIPLIER + Game.BLOCK_WIDTH/2);
+		endTurnBtn.setY(Game.NUM_ROWS * Game.BLOCK_HEIGHT/END_TURN_MULTIPLIER);
 	}
 
 	public void draw() {
@@ -80,11 +90,11 @@ public class UI {
 			atkBtn.setX(xCoord * Game.BLOCK_WIDTH + atkOffset.x);
 			atkBtn.setY(yCoord * Game.BLOCK_HEIGHT + atkOffset.y);
 			atkBtn.setVisible(true);
-			
 		} else {
 			moveBtn.setVisible(false);
 			atkBtn.setVisible(false);
 		}
+		endTurnBtn.setVisible(false);
 	}
 	
 	private void calculateAtkBtnOffset(int quadrant) {
@@ -119,10 +129,25 @@ public class UI {
 		moveOffset.set(x_offset, y_offset);
 	}
 	
+	public void showEndTurn() {
+		endTurnBtn.setVisible(true);
+	}
+	
+	public boolean endTurnPressed(int prevX, int prevY) {
+		if (endTurnBtn.isPressed()) {
+			System.out.println("UI::end turn pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			endTurnBtn.setVisible(false);
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean moveButtonPressed(int prevX, int prevY) {
 		// don't change what tile we're examining if a button is being pressed
 		if (moveBtn.isPressed()) {
-			System.out.println("Game::Move pressed");
+			System.out.println("UI::Move pressed");
 			selectedTile.setX(prevX);
 			selectedTile.setY(prevY);
 			// clear button so that movement tiles can be shown
@@ -135,7 +160,7 @@ public class UI {
 	
 	public boolean atkButtonPressed(int prevX, int prevY) {
 		if (atkBtn.isPressed()) {
-			System.out.println("Game::Attack pressed");
+			System.out.println("UI::Attack pressed");
 			selectedTile.setX(prevX);
 			selectedTile.setY(prevY);
 			// clear button so that movement tiles can be shown
