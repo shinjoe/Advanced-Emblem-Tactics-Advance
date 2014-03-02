@@ -5,45 +5,44 @@ public class Infantry extends Unit {
 	private static final int INFANTRY_DEFAULT_HP = 10;
 	private static final int INFANTRY_ATK_STR = 4;
 	
-	public Infantry() {
-		super(INFANTRY_DEFAULT_HP);
+	public Infantry(int team) {
+		super(INFANTRY_DEFAULT_HP, team);
 		this.name = "INF";
 		this.attackStr = INFANTRY_ATK_STR;
 	}
 	
-	public Infantry(int hp) {
-		super(hp);
+	public Infantry(int hp, int team) {
+		super(hp, team);
 		this.name = "INF";
 		this.attackStr = INFANTRY_ATK_STR;
 	}
 	
-	public void getAttacked(Unit attackingUnit) 
-	{
+	public void getAttacked(Unit attackingUnit) {
 		int attackedHP = this.getHp();
 		int attackingHP = attackingUnit.getHp();
 		int attackingStr = attackingUnit.getAtkStr();
 		
-		if(attackedHP <= 0 || attackingHP <= 0)
-			System.out.println("Invalid HP before attack");
+		if (attackedHP <= 0 || attackingHP <= 0)
+			System.err.println("Invalid HP before attack");
 		
-		if(attackingUnit.getName() == "INF")
-		{
-			int damage = (int)(attackingStr * (attackingHP/10.0));
-			if(damage < 1)
+		if (attackingUnit.getName().equals("INF")) {
+			// TODO: remove magic numbers (10.0, 20.0, 2.5, 3), make constants 
+			int damage = (int) (attackingStr * (attackingHP/10.0));
+			if (damage < 1) 
 				this.setHp(attackedHP - 1);
-			else
+			else 
 				this.setHp(attackedHP - damage);
 		}
-		else if(attackingUnit.getName() == "TANK")
-		{
-			int damage = (int)(attackingStr * (attackingHP/20.0) * 2.5);
-			if(damage < 3)
+		else if (attackingUnit.getName().equals("TANK")) {
+			int damage = (int) (attackingStr * (attackingHP/20.0) * 2.5);
+			if (damage < 3)
 				this.setHp(attackedHP - 3);
 			else
 				this.setHp(attackedHP - damage);
 		}
-		else
-			System.out.println("Invalid Unit attacking");
+		else {
+			System.err.println("Invalid Unit attacking");
+		}
 	}
-
+	
 }

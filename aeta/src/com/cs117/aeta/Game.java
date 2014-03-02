@@ -31,6 +31,7 @@ public class Game implements ApplicationListener {
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
 	
+	public static int pid = 0;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
@@ -86,7 +87,8 @@ public class Game implements ApplicationListener {
 		tilemap.drawTerrainTexture();
 		tilemap.drawWalkable();
 		tilemap.drawAttackable();
-		tilemap.__DEBUG_drawUnitString();
+		//tilemap.__DEBUG_drawUnitString();
+		tilemap.drawUnits();
 		spriteBatch.end();
 		
 		ui.draw();

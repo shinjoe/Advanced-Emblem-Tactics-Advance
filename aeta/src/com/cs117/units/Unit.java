@@ -4,9 +4,16 @@ public abstract class Unit {
 	private int hp;
 	protected String name;
 	protected int attackStr;
+	// 0 -> red; 1 -> blue
+	protected int team;
 	
-	public Unit(int hp) {
+	public Unit(int hp, int team) {
 		this.hp = hp;
+		this.team = team;
+	}
+	
+	public int getTeam() {
+		return team;
 	}
 	
 	public int getHp() {
@@ -29,7 +36,7 @@ public abstract class Unit {
 	public String toString() {
 		return name;
 	}
-	
+		
 	public abstract void getAttacked(Unit attackingUnit);
 	
 	

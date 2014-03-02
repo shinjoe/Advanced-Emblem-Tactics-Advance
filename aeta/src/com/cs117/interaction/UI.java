@@ -61,7 +61,8 @@ public class UI {
 	
 	public void handleTilePress(int xCoord, int yCoord) {
 		// show UI if a coordinate with a unit is pressed
-		if (unitMap.containsKey(selectedTile)) {
+		if (unitMap.containsKey(selectedTile) && 
+			unitMap.get(selectedTile).getTeam() == Game.pid) {
 			int quadrant = selectedTile.getQuadrant();
 			
 			calculateMoveBtnOffset(quadrant);

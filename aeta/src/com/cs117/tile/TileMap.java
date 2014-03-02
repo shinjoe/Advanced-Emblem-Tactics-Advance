@@ -21,6 +21,9 @@ public class TileMap {
 	private static final int IMMEDIATE_WALKABLE = 8;
 	private static final int IMMEDIATE_ATTACKABLE = 24;
 	
+	public static final int RED_TEAM  = 0;
+	public static final int BLUE_TEAM = 1; 
+	
 	private int[][] terrain = null;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
@@ -33,6 +36,10 @@ public class TileMap {
     private Texture blueOverlay;
     private Texture redOverlay;
     private Texture mtnTexture;
+    private Texture blue_inf_right;
+    private Texture blue_tank_right;
+    private Texture red_inf_right;
+    private Texture red_tank_right;
     
     private ActionResolver AR;
     	
@@ -60,15 +67,18 @@ public class TileMap {
 		blueOverlay = new Texture(Gdx.files.internal("gfx/blueOverlay.png"));
 		redOverlay = new Texture(Gdx.files.internal("gfx/redOverlay.png"));
 		mtnTexture = new Texture(Gdx.files.internal("gfx/mtn.png"));
+		blue_inf_right = new Texture(Gdx.files.internal("gfx/blue_inf_right.png"));
+		blue_tank_right = new Texture(Gdx.files.internal("gfx/blue_tank_right.png"));
+		red_inf_right = new Texture(Gdx.files.internal("gfx/red_inf_right.png"));
+		red_tank_right = new Texture(Gdx.files.internal("gfx/red_tank_right.png"));
 		
 		unitMap = new HashMap<Coordinate, Unit>();
 		// put an infantry unit at (0, 0)
-		unitMap.put(new Coordinate(0, 0), new Infantry());
+		unitMap.put(new Coordinate(0, 0), new Infantry(RED_TEAM));
 		// put a tank at (5, 1)
-		unitMap.put(new Coordinate(5, 1), new Tank());
-		unitMap.put(new Coordinate(0, 7), new Tank());
-		unitMap.put(new Coordinate(9, 7), new Infantry());
-		unitMap.put(new Coordinate(9, 0), new Infantry());
+		unitMap.put(new Coordinate(5, 1), new Tank(RED_TEAM));
+		unitMap.put(new Coordinate(1, 3), new Tank(BLUE_TEAM));
+		unitMap.put(new Coordinate(5, 5), new Infantry(BLUE_TEAM));
 		
 		walkable = null;
 		attackable = null;
@@ -134,8 +144,7 @@ public class TileMap {
 		if (attackable != null) {
 			for (Coordinate c : attackable) {
 				// TODO: implement attacking logic
-				if (c.equals(selectedTile) && unitMap.containsKey(c)) 
-				{	
+				if (c.equals(selectedTile) && unitMap.containsKey(c)) {	
 					Unit attacked = unitMap.get(c);
 					Coordinate currUnit = new Coordinate(prevX, prevY);
 					Unit attacking = unitMap.get(currUnit);
@@ -190,6 +199,33 @@ public class TileMap {
 					 c.getX() * Game.BLOCK_WIDTH + Game.UNIT_TEXT_X_OFFSET, 
 					 (c.getY() + 1) * Game.BLOCK_HEIGHT - Game.UNIT_TEXT_Y_OFFSET);
 		}
+	}
+	
+	public void drawUnits() {
+		Texture curTexture = null;
+		for (Coordinate c : unitMap.keySet()) {
+			Unit curUnit = unitMap.get(c);
+			curTexture = resolveTexture(curUnit);
+			
+			spriteBatch.draw(curTexture, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
+					 c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
+					 Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
+					 Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+		}
+	}
+	
+	private Texture resolveTexture(Unit curUnit) {
+		if (curUnit.getName().equals("INF")) {
+			if (curUnit.getTeam() == RED_TEAM)
+				return red_inf_right;
+			else
+				return blue_inf_right;
+		} else if (curUnit.getName().equals("TANK")) {
+			if (curUnit.getTeam() == RED_TEAM)
+				return red_tank_right;
+			else 
+				return blue_tank_right;
+		} else return null;
 	}
 	
 	public HashMap<Coordinate, Unit> getUnitMap() {
