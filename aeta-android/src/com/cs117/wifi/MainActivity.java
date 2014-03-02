@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Log;
 
@@ -27,17 +26,14 @@ import com.cs117.aeta.R;
 
 public class MainActivity extends AndroidApplication {
 	
-	public static final int SERVER_PORT = 8888;
-	public static final int CLIENT_PORT = 8889;
-	private static final String TAG = "MainActivity";
+	public static final int SERVER_PORT = 8800;
+	public static final int CLIENT_PORT = 8900;
+	public static final String TAG = "MainActivity";
 	
 	private Button mDiscoverButton;
 	private Button mPlayButton;
 	private Button mGroupButton;
 	private Button mDisconnectButton;
-	
-	private EditText mEditText;
-	private Button mTestButton;
 	
 	private ListView mPeerList;
 	private View mGameView;
@@ -58,7 +54,7 @@ public class MainActivity extends AndroidApplication {
 	private boolean mIsGroupOwner = false;
 	private boolean mInGame = false;
 
-	private String mPeerAddress = "";
+	static volatile String mPeerAddress = null;
 	
 	private Game mGame;
 	
@@ -90,19 +86,7 @@ public class MainActivity extends AndroidApplication {
 			
 			@Override
 			public void onClick(View v) {
-				mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-					
-					@Override
-					public void onSuccess() {
-						Toast.makeText(getApplicationContext(), "Looking for friends...", Toast.LENGTH_SHORT).show();
-					}
-					
-					@Override
-					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Try again. " + reason, Toast.LENGTH_SHORT).show();
-						Log.d(TAG, "Discover peer failure. Reason: " + reason);
-					}
-				});
+				discoverPeers();
 			}
 		});
         
@@ -130,7 +114,7 @@ public class MainActivity extends AndroidApplication {
 
 					@Override
 					public void onSuccess() {
-						Toast.makeText(getApplicationContext(), "Forming posse...", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getApplicationContext(), "Forming posse...", Toast.LENGTH_SHORT).show();
 					}
 					
 					@Override
@@ -148,62 +132,9 @@ public class MainActivity extends AndroidApplication {
 			
 			@Override
 			public void onClick(View v) {
-				mManager.removeGroup(mChannel, new ActionListener() {
-	
-					@Override
-					public void onSuccess() {
-						Toast.makeText(getApplicationContext(), "Disconnecting...", Toast.LENGTH_SHORT).show();
-					}
-						
-					@Override
-					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Nope, you're staying here. " + reason, Toast.LENGTH_SHORT).show();
-						Log.d(TAG, "Remove group failure. Reason: " + reason);
-					}
-						
-				});
-				mManager.cancelConnect(mChannel, new ActionListener() {
-
-					@Override
-					public void onSuccess() {
-						Toast.makeText(getApplicationContext(), "Cancelling connection...", Toast.LENGTH_SHORT).show();	
-					}
-						
-					@Override
-					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "Can't disconnect... whoops", Toast.LENGTH_SHORT).show();
-						Log.d(TAG, "Cancel connect failure. Reason: " + reason);
-					}
-						
-				});
-				
-				mPeer = null;
-				if (mPeerAdapter != null && mPeerArrayList != null) {
-					mPeerArrayList.clear();
-					mPeerAdapter.notifyDataSetChanged();
-				}
-				if (mServerThread != null) {
-					mServerThread.interrupt();
-					mServerThread = null;
-				}
-				if (mClientThread != null) {
-					mClientThread.interrupt();
-					mClientThread = null;
-				}
-				mPeerAddress = "";
+				disconnect();
+				discoverPeers();
 			}
-		});
-        
-        // for testing
-        mEditText = (EditText) findViewById(R.id.editText1);
-        mTestButton = (Button) findViewById(R.id.test_button);
-        mTestButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-					createClientThread(mEditText.getText().toString());
-			}
-			
 		});
         
         mPeerList = (ListView) findViewById(R.id.peer_list);
@@ -226,7 +157,7 @@ public class MainActivity extends AndroidApplication {
 
 					@Override
 					public void onSuccess() {
-						Toast.makeText(getApplicationContext(), "Trying to connect...", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getApplicationContext(), "Trying to connect...", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -245,6 +176,9 @@ public class MainActivity extends AndroidApplication {
         
         mGame = new Game(mResolver);
         mGameView = initializeForView(mGame, cfg);
+        
+        //disconnect();
+        discoverPeers();
     }
 
     public Game getGame(){
@@ -267,6 +201,10 @@ public class MainActivity extends AndroidApplication {
 		mPeerAddress = peerAddress;
 	}
 	
+	public String getPeerAddress() {
+		return mPeerAddress;
+	}
+	
 	public void setIsGroupOwner(boolean isOwner) {
 		mIsGroupOwner = isOwner;
 	}
@@ -287,10 +225,82 @@ public class MainActivity extends AndroidApplication {
 	// Creates sending threads, return after sending
 	public void createClientThread(String msg) {
 		if (mIsGroupOwner)
-			mClientThread = new ClientThread(this, mPeerAddress, msg, CLIENT_PORT);
+			mClientThread = new ClientThread(this, msg, CLIENT_PORT);
 		else
-			mClientThread = new ClientThread(this, mPeerAddress, msg, SERVER_PORT);
+			mClientThread = new ClientThread(this, msg, SERVER_PORT);
 		new Thread(mClientThread).start();
+	}
+	
+	public void cleanUp() {
+		mPeer = null;
+		if (mPeerAdapter != null && mPeerArrayList != null) {
+			mPeerArrayList.clear();
+			mPeerAdapter.notifyDataSetChanged();
+		}
+		if (mServerThread != null) {
+			mServerThread.interrupt();
+			mServerThread = null;
+		}
+		if (mClientThread != null) {
+			mClientThread.interrupt();
+			mClientThread = null;
+		}
+		mPeerAddress = null;
+		mIsGroupOwner = false;
+		mInGame = false;
+	}
+	
+    public boolean getInGame() {
+    	return mInGame;
+    }
+	
+	public void discoverPeers() {
+		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+			
+			@Override
+			public void onSuccess() {
+				//Toast.makeText(getApplicationContext(), "Looking for friends...", Toast.LENGTH_SHORT).show();
+			}
+			
+			@Override
+			public void onFailure(int reason) {
+				Toast.makeText(getApplicationContext(), "Try again. " + reason, Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Discover peer failure. Reason: " + reason);
+			}
+		});
+	}
+	
+	public void disconnect() {
+		mManager.removeGroup(mChannel, new ActionListener() {
+			
+			@Override
+			public void onSuccess() {
+				//Toast.makeText(getApplicationContext(), "Disconnecting...", Toast.LENGTH_SHORT).show();
+			}
+				
+			@Override
+			public void onFailure(int reason) {
+				Toast.makeText(getApplicationContext(), "Nope, you're staying here. " + reason, Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Remove group failure. Reason: " + reason);
+			}
+				
+		});
+		mManager.cancelConnect(mChannel, new ActionListener() {
+
+			@Override
+			public void onSuccess() {
+				//Toast.makeText(getApplicationContext(), "Cancelling connection...", Toast.LENGTH_SHORT).show();	
+			}
+				
+			@Override
+			public void onFailure(int reason) {
+				Toast.makeText(getApplicationContext(), "Can't cancel connection... whoops", Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Cancel connect failure. Reason: " + reason);
+			}
+				
+		});
+		
+		cleanUp();
 	}
 	
     @Override
@@ -298,22 +308,16 @@ public class MainActivity extends AndroidApplication {
     	super.onResume();
     	registerReceiver(mReceiver, mIntentFilter);
     }
-    
-    public boolean getInGame() {
-    	return mInGame;
-    }
-    
+
     @Override
     public void onPause() {
     	super.onPause();
     	unregisterReceiver(mReceiver);
-    	if (mServerThread != null) {
-    		mServerThread.interrupt();
-    		mServerThread = null;
-    	}
-    	if (mClientThread != null) {
-			mClientThread.interrupt();
-			mClientThread = null;
-		}
+    }
+    
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	disconnect();
     }
 }

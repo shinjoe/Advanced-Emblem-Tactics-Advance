@@ -3,6 +3,7 @@ package com.cs117.wifi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,16 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.cs117.aeta.Game;
-import com.cs117.aeta.R;
 
-import android.widget.EditText;
+import android.util.Log;
 import android.widget.Toast;
 
 public class ServerThread extends Thread {
 
 	private MainActivity mActivity;
 	private String mFromClient = "";
-	private String mPeerAddress = "";
 	private int mPort;
 	
 	public ServerThread(MainActivity activity, int port) {
@@ -30,25 +29,26 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(mPort);
+			ServerSocket serverSocket = new ServerSocket();
+			serverSocket.setReuseAddress(true);
+			serverSocket.bind(new InetSocketAddress(mPort));
+			Socket clientSocket = null;
 			
 			currentThread();
 			while (!Thread.interrupted()) {
-				Socket clientSocket = serverSocket.accept();
-				if (mPeerAddress.equals("")) {
-					mPeerAddress = clientSocket.getInetAddress().getHostAddress();
-					mActivity.setPeerAddress(mPeerAddress);
+				clientSocket = serverSocket.accept();
+				if (MainActivity.mPeerAddress == null) {
+					String peerAddress = clientSocket.getInetAddress().getHostAddress();
+					MainActivity.mPeerAddress = peerAddress;
+					mActivity.runOnUiThread(new Runnable() {
+	
+						@Override
+						public void run() {
+							Toast.makeText(mActivity.getApplicationContext(), "Connected to peer w/ IP: " + mActivity.getPeerAddress(), Toast.LENGTH_SHORT).show();
+						}
+						
+					});
 				}
-				
-				mActivity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						Toast.makeText(mActivity.getApplicationContext(), "peer IP: " + mPeerAddress, Toast.LENGTH_SHORT).show();
-					}
-					
-				});
-				
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				mFromClient = in.readLine();
 				
@@ -58,8 +58,11 @@ public class ServerThread extends Thread {
 				clientSocket.close();
 			}
 			
+			if (clientSocket != null)
+				clientSocket.close();
 			serverSocket.close();	
 		} catch (IOException e) {
+			Log.d(MainActivity.TAG, "Server thread exception: " + e.toString());
 			return;
 		}
 	}
@@ -76,20 +79,19 @@ public class ServerThread extends Thread {
 					{	
 						fromClient = new JSONObject(mFromClient);
 						Game curGame = mActivity.getGame();
-						curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
+						curGame.getTileMap().updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
 													fromClient.getInt("prevX"), fromClient.getInt("prevY"));
 					}
 					catch(JSONException e) {
-						e.printStackTrace();
-						System.err.println("receive coord failure");
+						//e.printStackTrace();
+						//System.err.println("receive coord failure");
+						Log.d(MainActivity.TAG, "receive coord failure: " + e.toString());
 					}
 					
-					
-					
-					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_LONG).show();
+					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_SHORT).show();
 				}
 				else
-					((EditText)mActivity.findViewById(R.id.editText1)).setText(mFromClient);
+					Toast.makeText(mActivity.getApplicationContext(), mFromClient + " from " + mActivity.getPeerAddress(), Toast.LENGTH_SHORT).show();
 			}
 			
 		});
