@@ -55,8 +55,8 @@ public class TileMap {
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 				{0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
 				{0, 0, 1, 1, 1, 1, 0, 1, 0, 0},
-				{0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
-				{0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+				{1, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+				{1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
 				{0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
 				{0, 1, 1, 0, 0, 1, 1, 1, 1, 0},
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -188,7 +188,7 @@ public class TileMap {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds
-				if (i > 0 && i < terrain[0].length && j > 0 && j < terrain.length){ 
+				if (i >= 0 && i < terrain[0].length && j >= 0 && j < terrain.length){ 
 						attackable.add(new Coordinate(i, terrain.length - j - 1));
 				}
 			}
@@ -207,12 +207,29 @@ public class TileMap {
 					if(attacked.getHp() <= 0)
 						unitMap.remove(c);
 					
+					atkSynch(c.getX(), c.getY(), attacked.getHp());
+					
 					attackable = null;
 					break;
 				}
 			}
 			attackable = null;
 		}
+	}
+	
+	public void atkSynch(int atkedX, int atkedY, int newHP)
+	{
+		AR.sendAtkRes(atkedX, atkedY, newHP);
+	}
+	
+	public void updateUnit(int atkedX, int atkedY, int newHP)
+	{
+		Coordinate atkedC = new Coordinate(atkedX, atkedY);
+		Unit atked = unitMap.get(atkedC);
+		if(newHP <= 0)
+			unitMap.remove(atkedC);
+		else
+			atked.setHp(newHP);
 	}
 	
 	/** === MOVEMENT FUNCTIONS === **/
@@ -246,7 +263,7 @@ public class TileMap {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds
-				if (i > 0 && i < terrain[0].length && j > 0 && j < terrain.length) {
+				if (i >= 0 && i < terrain[0].length && j >= 0 && j < terrain.length) {
 					unitCoord.setX(i);
 					unitCoord.setY(terrain.length - j - 1);
 					// 1 is passable, 0 impassable terrain for now

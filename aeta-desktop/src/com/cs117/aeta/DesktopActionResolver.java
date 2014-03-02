@@ -22,4 +22,10 @@ public class DesktopActionResolver implements ActionResolver {
 		
 	}
 
+	@Override
+	public void sendAtkRes(int atkedX, int atkedY, int newHP) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

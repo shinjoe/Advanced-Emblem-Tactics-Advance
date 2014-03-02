@@ -76,12 +76,17 @@ public class ServerThread extends Thread {
 					{	
 						fromClient = new JSONObject(mFromClient);
 						Game curGame = mActivity.getGame();
-						curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
-													fromClient.getInt("prevX"), fromClient.getInt("prevY"));
+						int type = fromClient.getInt("type");
+						if(type == 0)
+							curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
+													   fromClient.getInt("prevX"), fromClient.getInt("prevY"));
+						else
+							curGame.tilemap.updateUnit(fromClient.getInt("atkedX"), fromClient.getInt("atkedY"),
+													   fromClient.getInt("newHP"));
 					}
 					catch(JSONException e) {
 						e.printStackTrace();
-						System.err.println("receive coord failure");
+						System.err.println("data send failure");
 					}
 					
 					

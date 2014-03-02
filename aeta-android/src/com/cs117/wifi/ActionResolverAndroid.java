@@ -55,7 +55,7 @@ public class ActionResolverAndroid implements ActionResolver {
 		
 		JSONObject coords = new JSONObject();
 		try{
-			coords.put("inGame", true);
+			coords.put("type", 0);
 			coords.put("prevX", prevX);
 			coords.put("prevY", prevY);
 			coords.put("newX", newX);
@@ -66,5 +66,24 @@ public class ActionResolverAndroid implements ActionResolver {
 			System.err.println("send coord failure");
 		}
 		mActivity.createClientThread(coords.toString());
+	}
+
+	public void sendAtkRes(int atkedX, int atkedY, int newHP)
+	{
+		JSONObject atkRes = new JSONObject();
+		try 
+		{
+			atkRes.put("type",  1);
+			atkRes.put("atkedX", atkedX);
+			atkRes.put("atkedY", atkedY);
+			atkRes.put("newHP",  newHP);
+		}
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+			System.err.println("Send attack results failure");
+		}
+		
+		mActivity.createClientThread(atkRes.toString());
 	}
 }
