@@ -31,6 +31,7 @@ public class Game implements ApplicationListener {
 	public static UI ui;
 	
 	public static int pid = 0;
+	public static int curTurn = 0;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
