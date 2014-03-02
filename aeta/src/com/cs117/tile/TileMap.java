@@ -134,8 +134,15 @@ public class TileMap {
 		if (attackable != null) {
 			for (Coordinate c : attackable) {
 				// TODO: implement attacking logic
-				if (c.equals(selectedTile)) {
-					updateUnit(xCoord, yCoord, prevX, prevY);
+				if (c.equals(selectedTile) && unitMap.containsKey(c)) 
+				{	
+					Unit attacked = unitMap.get(c);
+					Coordinate currUnit = new Coordinate(prevX, prevY);
+					Unit attacking = unitMap.get(currUnit);
+					
+					attacked.getAttacked(attacking);
+					if(attacked.getHp() <= 0)
+						unitMap.remove(c);
 					System.out.println("atk");
 					attackable = null;
 					break;
