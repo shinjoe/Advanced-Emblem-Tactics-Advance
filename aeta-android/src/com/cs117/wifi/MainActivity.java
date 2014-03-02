@@ -1,5 +1,6 @@
 package com.cs117.wifi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -28,7 +29,7 @@ public class MainActivity extends AndroidApplication {
 	
 	public static final int SERVER_PORT = 8800;
 	public static final int CLIENT_PORT = 8900;
-	public static final String TAG = "MainActivity";
+	public static final String TAG = "AETA";
 	
 	private Button mDiscoverButton;
 	private Button mPlayButton;
@@ -238,10 +239,18 @@ public class MainActivity extends AndroidApplication {
 			mPeerAdapter.notifyDataSetChanged();
 		}
 		if (mServerThread != null) {
+			Toast.makeText(this, "Killing server.", Toast.LENGTH_SHORT).show();
+			try {
+				if (((ServerThread)mServerThread).getServerSocket() != null)
+					((ServerThread)mServerThread).getServerSocket().close();
+			} catch (IOException e) {
+				Log.d(TAG, "Server interrupt exception: " + e.toString());
+			}
 			mServerThread.interrupt();
 			mServerThread = null;
 		}
 		if (mClientThread != null) {
+			Toast.makeText(this, "Killing client.", Toast.LENGTH_SHORT).show();
 			mClientThread.interrupt();
 			mClientThread = null;
 		}
@@ -264,7 +273,7 @@ public class MainActivity extends AndroidApplication {
 			
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(getApplicationContext(), "Try again. " + reason, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Try again. " + reason, Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Discover peer failure. Reason: " + reason);
 			}
 		});
@@ -280,7 +289,7 @@ public class MainActivity extends AndroidApplication {
 				
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(getApplicationContext(), "Nope, you're staying here. " + reason, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Nope, you're staying here. " + reason, Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Remove group failure. Reason: " + reason);
 			}
 				
@@ -294,7 +303,7 @@ public class MainActivity extends AndroidApplication {
 				
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(getApplicationContext(), "Can't cancel connection... whoops", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Can't cancel connection... whoops", Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Cancel connect failure. Reason: " + reason);
 			}
 				

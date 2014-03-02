@@ -20,6 +20,7 @@ public class ServerThread extends Thread {
 	private MainActivity mActivity;
 	private String mFromClient = "";
 	private int mPort;
+	private ServerSocket mServerSocket = null;;
 	
 	public ServerThread(MainActivity activity, int port) {
 		this.mActivity = activity;
@@ -29,14 +30,14 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket();
-			serverSocket.setReuseAddress(true);
-			serverSocket.bind(new InetSocketAddress(mPort));
+			mServerSocket = new ServerSocket();
+			mServerSocket.setReuseAddress(true);
+			mServerSocket.bind(new InetSocketAddress(mPort));
 			Socket clientSocket = null;
 			
 			currentThread();
 			while (!Thread.interrupted()) {
-				clientSocket = serverSocket.accept();
+				clientSocket = mServerSocket.accept();
 				if (MainActivity.mPeerAddress == null) {
 					String peerAddress = clientSocket.getInetAddress().getHostAddress();
 					MainActivity.mPeerAddress = peerAddress;
@@ -60,14 +61,14 @@ public class ServerThread extends Thread {
 			
 			if (clientSocket != null)
 				clientSocket.close();
-			serverSocket.close();	
+			mServerSocket.close();	
 		} catch (IOException e) {
 			Log.d(MainActivity.TAG, "Server thread exception: " + e.toString());
 			return;
 		}
 	}
 	
-	public void updateView() {
+	private void updateView() {
 		mActivity.runOnUiThread(new Runnable() {
 
 			@Override
@@ -95,5 +96,9 @@ public class ServerThread extends Thread {
 			}
 			
 		});
+	}
+	
+	public ServerSocket getServerSocket() {
+		return mServerSocket;
 	}
 }
