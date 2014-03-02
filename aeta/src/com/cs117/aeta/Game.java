@@ -16,13 +16,6 @@ import com.cs117.interaction.UI;
 
 
 public class Game implements ApplicationListener {
-	
-	public static int WIDTH;
-	public static int HEIGHT;
-	
-	public static TileMap tilemap;
-	public static UI ui;
-	
 	public static int BLOCK_WIDTH;
 	public static int BLOCK_HEIGHT;
 	public static final int TILE_OFFSET = 2;
@@ -30,6 +23,12 @@ public class Game implements ApplicationListener {
 	public static int UNIT_TEXT_Y_OFFSET;
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
+	
+	public static int WIDTH;
+	public static int HEIGHT;
+	
+	public static TileMap tilemap;
+	public static UI ui;
 	
 	public static int pid = 0;
 	private ShapeRenderer shapeRenderer;
@@ -105,8 +104,12 @@ public class Game implements ApplicationListener {
 			
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
+			
+			// Only if unit is pressed
 			tilemap.moveSelectedUnit(xCoord, yCoord, prevX, prevY);
 			tilemap.attackWithSelectedUnit(xCoord, yCoord, prevX, prevY);
+			
+			// Only if atk/move button pressed
 			if (ui.moveButtonPressed(prevX, prevY)) {
 				tilemap.getWalkableTerrain();
 			} else if (ui.atkButtonPressed(prevX, prevY)) {

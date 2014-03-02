@@ -19,11 +19,13 @@ import com.cs117.units.Unit;
 public class UI {
 	
 	private Stage stage;
+	
 	private TextureAtlas buttonAtlas;
 	private TextButtonStyle buttonStyle;
 	private TextButton moveBtn;
 	private TextButton atkBtn;
 	private Skin skin;
+	
 	private Coordinate selectedTile;
 	private HashMap<Coordinate, Unit> unitMap;
 	private Vector2 moveOffset;
@@ -31,6 +33,7 @@ public class UI {
 	
 	public UI(int WIDTH, int HEIGHT, BitmapFont font, TileMap tilemap) {
 		stage = new Stage(WIDTH, HEIGHT, true);
+		
 		skin = new Skin();
 		buttonAtlas = new TextureAtlas("buttons/button.pack");
 		skin.addRegions(buttonAtlas);
@@ -38,6 +41,7 @@ public class UI {
 		buttonStyle.up = skin.getDrawable("button");
 		buttonStyle.down = skin.getDrawable("buttonpressed");
 		buttonStyle.font = font;	
+		
 		moveBtn = new TextButton("Move", buttonStyle);
 		atkBtn = new TextButton("Attack", buttonStyle);
 		stage.addActor(moveBtn);
@@ -48,6 +52,7 @@ public class UI {
 		atkBtn.setVisible(false);
 		atkBtn.setWidth(Game.BLOCK_WIDTH);
 		atkBtn.setHeight(Game.BLOCK_HEIGHT);
+		
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
 		unitMap = tilemap.getUnitMap();

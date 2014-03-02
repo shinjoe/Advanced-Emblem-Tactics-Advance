@@ -27,10 +27,12 @@ public class TileMap {
 	private int[][] terrain = null;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
+	
 	private Coordinate selectedTile;
 	private HashMap<Coordinate, Unit> unitMap;
     private ArrayList<Coordinate> walkable;
     private ArrayList<Coordinate> attackable;
+    
     private BitmapFont font;
     private Texture grassTexture;
     private Texture blueOverlay;
@@ -62,7 +64,7 @@ public class TileMap {
 
 		this.shapeRenderer = shapeRenderer;
 		this.spriteBatch = spriteBatch;
-		selectedTile = new Coordinate(-1, -1);
+		
 		grassTexture = new Texture(Gdx.files.internal("gfx/grass.png"));
 		blueOverlay = new Texture(Gdx.files.internal("gfx/blueOverlay.png"));
 		redOverlay = new Texture(Gdx.files.internal("gfx/redOverlay.png"));
@@ -71,6 +73,8 @@ public class TileMap {
 		blue_tank_right = new Texture(Gdx.files.internal("gfx/blue_tank_right.png"));
 		red_inf_right = new Texture(Gdx.files.internal("gfx/red_inf_right.png"));
 		red_tank_right = new Texture(Gdx.files.internal("gfx/red_tank_right.png"));
+		
+		selectedTile = new Coordinate(-1, -1);
 		
 		unitMap = new HashMap<Coordinate, Unit>();
 		// put an infantry unit at (0, 0)
@@ -85,6 +89,7 @@ public class TileMap {
 		this.font = font;
 	}
 	
+	/** === DRAW FUNCTIONS === **/
 	public void drawTerrainTexture() {
 		Texture curTexture = null;
 		for (int i = terrain.length - 1; i > -1; i--) {
@@ -110,85 +115,6 @@ public class TileMap {
 					           Game.BLOCK_WIDTH  + Game.TILE_OFFSET, 
 					           Game.BLOCK_HEIGHT + Game.TILE_OFFSET );
 		}
-	}
-
-	public void updateSelectedTile(int xCoord, int yCoord) {
-		// only toggle if selected coordinates are different from previous
-		selectedTile.setX(xCoord);
-		selectedTile.setY(yCoord);
-	}
-	
-	public void drawAttackable() {
-		if (attackable != null) {
-			for (Coordinate c : attackable) {
-				spriteBatch.draw(redOverlay, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
-								 c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
-								 Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
-								 Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
-			}
-		}
-	}
-	
-	public void drawWalkable() {
-		if (walkable != null) {
-			for (Coordinate c : walkable) {
-				spriteBatch.draw(blueOverlay, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET,
-								   c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET,
-								   Game.BLOCK_WIDTH - Game.TILE_OFFSET,
-								   Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
-			}
-		}
-	}
-	
-	public void attackWithSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
-		if (attackable != null) {
-			for (Coordinate c : attackable) {
-				// TODO: implement attacking logic
-				if (c.equals(selectedTile) && unitMap.containsKey(c)) {	
-					Unit attacked = unitMap.get(c);
-					Coordinate currUnit = new Coordinate(prevX, prevY);
-					Unit attacking = unitMap.get(currUnit);
-					
-					attacked.getAttacked(attacking);
-					if(attacked.getHp() <= 0)
-						unitMap.remove(c);
-					System.out.println("atk");
-					attackable = null;
-					break;
-				}
-			}
-			attackable = null;
-		}
-	}
-	
-	public void moveSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
-		// move unit if blue tile selected
-		if (walkable != null) {
-			for (Coordinate c : walkable) {
-				if (c.equals(selectedTile)) {
-					updateUnit(xCoord, yCoord, prevX, prevY);
-					System.out.println("removing : ");
-					System.out.println(c);
-					// sync with other phone for now
-					synchronize(xCoord, yCoord, prevX, prevY);
-					walkable = null;
-					break;
-				}
-			}
-			// no tile selected, therefore effectively a cancel
-			walkable = null;	
-		}
-	}
-	
-	public void synchronize(int xCoord, int yCoord, int prevX, int prevY) {
-		AR.sendCoordinates(prevX, prevY, xCoord, yCoord);
-	}
-	
-	public void updateUnit(int xCoord, int yCoord, int prevX, int prevY) {
-		Coordinate prevCoord = new Coordinate(prevX, prevY);
-		Unit curUnit = unitMap.get(prevCoord);
-		unitMap.remove(prevCoord);
-		unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
 	}
 	
 	public void __DEBUG_drawUnitString() {
@@ -227,13 +153,23 @@ public class TileMap {
 				return blue_tank_right;
 		} else return null;
 	}
-	
-	public HashMap<Coordinate, Unit> getUnitMap() {
-		return unitMap;
+
+	public void updateSelectedTile(int xCoord, int yCoord) {
+		// only toggle if selected coordinates are different from previous
+		selectedTile.setX(xCoord);
+		selectedTile.setY(yCoord);
 	}
 	
-	public Coordinate getSelectedTile() {
-		return selectedTile;
+	/** === ATTACK FUNCTIONS === **/
+	public void drawAttackable() {
+		if (attackable != null) {
+			for (Coordinate c : attackable) {
+				spriteBatch.draw(redOverlay, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
+								 c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
+								 Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
+								 Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+			}
+		}
 	}
 	
 	/*
@@ -241,20 +177,52 @@ public class TileMap {
 	 */
 	public void getAttackableTerrain() {
 		attackable = new ArrayList<Coordinate>(IMMEDIATE_ATTACKABLE);
+		Unit atkUnit = unitMap.get(selectedTile);
+		int atkRange = atkUnit.getAtkRange();
 		
 		int x = selectedTile.getX();
 		int y = terrain.length - selectedTile.getY() - 1;
 		
-		for (int i = x - 2; i <= x + 2; i++) {
-			for (int j = y - 2; j <= y + 2; j++) {
+		for (int i = x - atkRange; i <= x + atkRange; i++) {
+			for (int j = y - atkRange; j <= y + atkRange; j++) {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds
 				if (i > 0 && i < terrain[0].length && j > 0 && j < terrain.length){ 
-					if (terrain[j][i] == 1) {
 						attackable.add(new Coordinate(i, terrain.length - j - 1));
-					}
 				}
+			}
+		}
+	}
+	
+	public void attackWithSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
+		if (attackable != null) {
+			for (Coordinate c : attackable) {
+				if (c.equals(selectedTile) && unitMap.containsKey(c)) {	
+					Unit attacked = unitMap.get(c);
+					Coordinate currUnit = new Coordinate(prevX, prevY);
+					Unit attacking = unitMap.get(currUnit);
+					
+					attacked.getAttacked(attacking);
+					if(attacked.getHp() <= 0)
+						unitMap.remove(c);
+					
+					attackable = null;
+					break;
+				}
+			}
+			attackable = null;
+		}
+	}
+	
+	/** === MOVEMENT FUNCTIONS === **/
+	public void drawWalkable() {
+		if (walkable != null) {
+			for (Coordinate c : walkable) {
+				spriteBatch.draw(blueOverlay, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET,
+								   c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET,
+								   Game.BLOCK_WIDTH - Game.TILE_OFFSET,
+								   Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
 			}
 		}
 	}
@@ -265,15 +233,16 @@ public class TileMap {
 	 */
 	public void getWalkableTerrain() {
 		walkable = new ArrayList<Coordinate>(IMMEDIATE_WALKABLE);
-	
+		Unit selUnit = unitMap.get(selectedTile);
+		int moveRnge = selUnit.getMoveRange();
 		int x = selectedTile.getX();
 		// transform coords to tile coords, which is flipped about the x axis (y invert)
 		int y = terrain.length - selectedTile.getY() - 1;
 		
 		Coordinate unitCoord = new Coordinate(-1, -1);
 		// look at all 8 adjacent squares
-		for (int i = x - 1; i <= x + 1; i++) {
-			for (int j = y - 1; j <= y + 1; j++) {
+		for (int i = x - moveRnge; i <= x + moveRnge; i++) {
+			for (int j = y - moveRnge; j <= y + moveRnge; j++) {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds
@@ -282,7 +251,8 @@ public class TileMap {
 					unitCoord.setY(terrain.length - j - 1);
 					// 1 is passable, 0 impassable terrain for now
 					// also check to see if a unit isn't there -- stacking not allowed
-					if (terrain[j][i] == 1 && !unitMap.containsKey(unitCoord)) {
+					if ((terrain[j][i] == 1 && !unitMap.containsKey(unitCoord)) || 
+						(terrain[j][i] == 0 && selUnit.isMntnClimber() && !unitMap.containsKey(unitCoord))) {
 						// transform coordinate back
 						walkable.add(new Coordinate(i, terrain.length - j - 1));		
 					}
@@ -292,5 +262,49 @@ public class TileMap {
 		}
 	
 	}
+	
+	public void moveSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
+		// move unit if blue tile selected
+		if (walkable != null) {
+			for (Coordinate c : walkable) {
+				if (c.equals(selectedTile)) {
+					updateUnit(xCoord, yCoord, prevX, prevY);
+					System.out.println("removing : ");
+					System.out.println(c);
+					// sync with other phone for now
+					moveSynchronize(xCoord, yCoord, prevX, prevY);
+					walkable = null;
+					break;
+				}
+			}
+			// no tile selected, therefore effectively a cancel
+			walkable = null;	
+		}
+	}
+	
+	public void moveSynchronize(int xCoord, int yCoord, int prevX, int prevY) {
+		AR.sendCoordinates(prevX, prevY, xCoord, yCoord);
+	}
+	
+	public void updateUnit(int xCoord, int yCoord, int prevX, int prevY) {
+		Coordinate prevCoord = new Coordinate(prevX, prevY);
+		Unit curUnit = unitMap.get(prevCoord);
+		unitMap.remove(prevCoord);
+		unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
+	}
+	
+	
+	
+	public HashMap<Coordinate, Unit> getUnitMap() {
+		return unitMap;
+	}
+	
+	public Coordinate getSelectedTile() {
+		return selectedTile;
+	}
+	
+	
+	
+	
 
 }

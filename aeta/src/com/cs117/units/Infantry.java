@@ -4,37 +4,45 @@ public class Infantry extends Unit {
 	
 	private static final int INFANTRY_DEFAULT_HP = 10;
 	private static final int INFANTRY_ATK_STR = 4;
+	private static final int INFANTRY_ATK_RANGE = 3;
+	private static final int INFANTRY_MOVE_RANGE = 3;
 	
 	public Infantry(int team) {
 		super(INFANTRY_DEFAULT_HP, team);
 		this.name = "INF";
 		this.attackStr = INFANTRY_ATK_STR;
+		this.atkRange = INFANTRY_ATK_RANGE;
+		this.moveRange = INFANTRY_MOVE_RANGE;
+		this.maxHP = INFANTRY_DEFAULT_HP;
 	}
 	
 	public Infantry(int hp, int team) {
 		super(hp, team);
 		this.name = "INF";
 		this.attackStr = INFANTRY_ATK_STR;
+		this.atkRange = INFANTRY_ATK_RANGE;
+		this.moveRange = INFANTRY_MOVE_RANGE;
+		this.maxHP = INFANTRY_DEFAULT_HP;
 	}
 	
 	public void getAttacked(Unit attackingUnit) {
 		int attackedHP = this.getHp();
 		int attackingHP = attackingUnit.getHp();
 		int attackingStr = attackingUnit.getAtkStr();
+		double atkMaxHP = (double)attackingUnit.getMaxHP();
 		
 		if (attackedHP <= 0 || attackingHP <= 0)
 			System.err.println("Invalid HP before attack");
 		
 		if (attackingUnit.getName().equals("INF")) {
-			// TODO: remove magic numbers (10.0, 20.0, 2.5, 3), make constants 
-			int damage = (int) (attackingStr * (attackingHP/10.0));
+			int damage = (int) (attackingStr * (attackingHP/atkMaxHP));
 			if (damage < 1) 
 				this.setHp(attackedHP - 1);
 			else 
 				this.setHp(attackedHP - damage);
 		}
 		else if (attackingUnit.getName().equals("TANK")) {
-			int damage = (int) (attackingStr * (attackingHP/20.0) * 2.5);
+			int damage = (int) (attackingStr * (attackingHP/atkMaxHP) * 2.5);
 			if (damage < 3)
 				this.setHp(attackedHP - 3);
 			else
@@ -43,6 +51,11 @@ public class Infantry extends Unit {
 		else {
 			System.err.println("Invalid Unit attacking");
 		}
+	}
+	
+	public boolean isMntnClimber()
+	{
+		return true;
 	}
 	
 }
