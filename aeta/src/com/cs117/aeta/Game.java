@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.cs117.tile.TileMap;
 import com.cs117.connection.ActionResolver;
@@ -36,6 +37,7 @@ public class Game implements ApplicationListener {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
+	private Rectangle glViewport;
 	
 	private Vector3 touchPos;
 	
@@ -64,6 +66,7 @@ public class Game implements ApplicationListener {
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.translate(WIDTH/2, HEIGHT/2);
 		cam.update();		
+		//glViewport = new Rectangle(0, 0, WIDTH, HEIGHT);
 		
 		tilemap = new TileMap(shapeRenderer, spriteBatch, font, mActionResolver);
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
@@ -78,12 +81,12 @@ public class Game implements ApplicationListener {
 		//stage.act();
 		
 		shapeRenderer.setProjectionMatrix(cam.combined);
-		
 		shapeRenderer.begin(ShapeType.Filled);
 		// draw objects on tilemap
 		tilemap.drawSelectedTile();
 		shapeRenderer.end();
 		
+		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		tilemap.drawTerrainTexture();
 		tilemap.drawWalkable();
@@ -110,6 +113,8 @@ public class Game implements ApplicationListener {
 		    	return;
 			}
 			
+		    cam.translate(0, BLOCK_HEIGHT);
+		    cam.update();
 			
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
