@@ -1,6 +1,6 @@
 package com.cs117.interaction;
 
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,7 +28,7 @@ public class UI {
 	private Skin skin;
 	
 	private Coordinate selectedTile;
-	private Hashtable<Coordinate, Unit> unitMap;
+	private ConcurrentHashMap<Coordinate, Unit> unitMap;
 	private Vector2 moveOffset;
 	private Vector2 atkOffset;
 	
