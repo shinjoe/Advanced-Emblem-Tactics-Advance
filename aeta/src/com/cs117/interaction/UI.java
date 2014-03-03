@@ -16,7 +16,13 @@ import com.cs117.units.Unit;
 
 public class UI {
 	
-	private static final int END_TURN_MULTIPLIER = 4;
+	private static final int MENU_WIDGET_HEIGHT = Game.BLOCK_HEIGHT * 2;
+	private static final int MENU_WIDGET_WIDTH = Game.BLOCK_WIDTH * 4;
+	private static final int END_TURN_X = Game.NUM_COLS * Game.BLOCK_WIDTH / 4 + Game.BLOCK_WIDTH / 2;
+	private static final int END_TURN_Y = Game.NUM_ROWS * Game.BLOCK_HEIGHT / 2;
+	private static final int CAM_BTN_X = END_TURN_X;
+	private static final int CAM_BTN_Y = END_TURN_Y - 3 * Game.BLOCK_HEIGHT;
+	
 	
 	private Stage stage;
 	
@@ -25,6 +31,7 @@ public class UI {
 	private TextButton moveBtn;
 	private TextButton atkBtn;
 	private TextButton endTurnBtn;
+	private TextButton camBtn;
 	private Skin skin;
 	
 	private Coordinate selectedTile;
@@ -46,9 +53,11 @@ public class UI {
 		moveBtn = new TextButton("Move", buttonStyle);
 		atkBtn = new TextButton("Attack", buttonStyle);
 		endTurnBtn = new TextButton("End Turn", buttonStyle);
+		camBtn = new TextButton("Move Camera", buttonStyle);
 		stage.addActor(moveBtn);
 		stage.addActor(atkBtn);
 		stage.addActor(endTurnBtn);
+		stage.addActor(camBtn);
 		moveBtn.setVisible(false);
 		moveBtn.setWidth(Game.BLOCK_WIDTH);
 		moveBtn.setHeight(Game.BLOCK_HEIGHT);
@@ -56,16 +65,21 @@ public class UI {
 		atkBtn.setWidth(Game.BLOCK_WIDTH);
 		atkBtn.setHeight(Game.BLOCK_HEIGHT);
 		endTurnBtn.setVisible(false);
-		endTurnBtn.setWidth(Game.BLOCK_WIDTH * END_TURN_MULTIPLIER);
-		endTurnBtn.setHeight(Game.BLOCK_HEIGHT * END_TURN_MULTIPLIER);
+		endTurnBtn.setWidth(MENU_WIDGET_WIDTH);
+		endTurnBtn.setHeight(MENU_WIDGET_HEIGHT);
+		camBtn.setVisible(false);
+		camBtn.setWidth(MENU_WIDGET_WIDTH);
+		camBtn.setHeight(MENU_WIDGET_HEIGHT);
+		camBtn.setX(CAM_BTN_X);
+		camBtn.setY(CAM_BTN_Y);
 		
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
 		unitMap = tilemap.getUnitMap();
 		moveOffset = new Vector2();
 		atkOffset = new Vector2();
-		endTurnBtn.setX(Game.NUM_COLS * Game.BLOCK_WIDTH / END_TURN_MULTIPLIER + Game.BLOCK_WIDTH/2);
-		endTurnBtn.setY(Game.NUM_ROWS * Game.BLOCK_HEIGHT / END_TURN_MULTIPLIER);
+		endTurnBtn.setX(END_TURN_X);
+		endTurnBtn.setY(END_TURN_Y);
 	}
 
 	public void draw() {
@@ -93,6 +107,7 @@ public class UI {
 			atkBtn.setVisible(false);
 		}
 		endTurnBtn.setVisible(false);
+		camBtn.setVisible(false);
 	}
 	
 	private void calculateAtkBtnOffset(int quadrant) {
@@ -127,8 +142,21 @@ public class UI {
 		moveOffset.set(x_offset, y_offset);
 	}
 	
-	public void showEndTurn() {
+	public void showMenu() {
 		endTurnBtn.setVisible(true);
+		camBtn.setVisible(true);
+	}
+	
+	public boolean cameraPressed(int prevX, int prevY) {
+		if (camBtn.isPressed()) {
+			System.out.println("UI::camera pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			camBtn.setVisible(false);
+			endTurnBtn.setVisible(false);
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean endTurnPressed(int prevX, int prevY) {
@@ -137,6 +165,7 @@ public class UI {
 			selectedTile.setX(prevX);
 			selectedTile.setY(prevY);
 			endTurnBtn.setVisible(false);
+			camBtn.setVisible(false);
 			return true;
 		}
 		return false;

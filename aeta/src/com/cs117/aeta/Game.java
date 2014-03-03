@@ -115,6 +115,8 @@ public class Game implements ApplicationListener {
 		    	this.curTurn = 1-pid;
 				mActionResolver.sendEndTurn(1-pid);
 		    	return;
+			} else if (ui.cameraPressed(prevX, prevY)) {
+				return;
 			}
 			
 		    //cam.translate(0, BLOCK_HEIGHT);
@@ -138,7 +140,7 @@ public class Game implements ApplicationListener {
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
 		} else if (Game.curTurn == Game.pid && Gdx.input.isKeyPressed(Keys.MENU)) {
-			ui.showEndTurn();
+			ui.showMenu();
 		}
 	}
 	
