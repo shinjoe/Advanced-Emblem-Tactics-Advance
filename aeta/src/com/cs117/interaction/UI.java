@@ -1,9 +1,6 @@
 package com.cs117.interaction;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -68,7 +65,7 @@ public class UI {
 		moveOffset = new Vector2();
 		atkOffset = new Vector2();
 		endTurnBtn.setX(Game.NUM_COLS * Game.BLOCK_WIDTH / END_TURN_MULTIPLIER + Game.BLOCK_WIDTH/2);
-		endTurnBtn.setY(Game.NUM_ROWS * Game.BLOCK_HEIGHT/END_TURN_MULTIPLIER);
+		endTurnBtn.setY(Game.NUM_ROWS * Game.BLOCK_HEIGHT / END_TURN_MULTIPLIER);
 	}
 
 	public void draw() {

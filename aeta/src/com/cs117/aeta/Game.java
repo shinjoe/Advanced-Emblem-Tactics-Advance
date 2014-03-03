@@ -105,7 +105,6 @@ public class Game implements ApplicationListener {
 			int prevY = tilemap.getSelectedTile().getY();
 			
 		    if (ui.endTurnPressed(prevX, prevY)) {
-		    	// TODO: properly send msg over to other side saying "I'm done"
 		    	this.curTurn = 1-pid;
 				mActionResolver.sendEndTurn(1-pid);
 		    	return;

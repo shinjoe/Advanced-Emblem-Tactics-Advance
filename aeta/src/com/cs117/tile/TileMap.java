@@ -1,7 +1,6 @@
 package com.cs117.tile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 
 import com.badlogic.gdx.Gdx;
