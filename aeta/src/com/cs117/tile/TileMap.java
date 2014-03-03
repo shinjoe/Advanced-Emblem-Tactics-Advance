@@ -336,8 +336,6 @@ public class TileMap {
 		unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
 	}
 	
-	
-	
 	public ConcurrentHashMap<Coordinate, Unit> getUnitMap() {
 		return unitMap;
 	}
@@ -346,6 +344,13 @@ public class TileMap {
 		return selectedTile;
 	}
 	
+	public int getNumTilemapRows() {
+		return terrain.length;
+	}
+	
+	public int getNumTilemapCols() {
+		return terrain[0].length;
+	}
 	
 	
 	

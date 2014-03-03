@@ -24,6 +24,8 @@ public class Game implements ApplicationListener {
 	public static int UNIT_TEXT_Y_OFFSET;
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
+	public static int REAL_ROWS;
+	public static int REAL_COLS;
 	public static int CAM_X_OFFSET = 0;
 	public static int CAM_Y_OFFSET = 0;
 	
@@ -75,6 +77,8 @@ public class Game implements ApplicationListener {
 		
 		tilemap = new TileMap(shapeRenderer, spriteBatch, font, hpFont, mActionResolver);
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
+		REAL_ROWS = tilemap.getNumTilemapRows();
+		REAL_COLS = tilemap.getNumTilemapCols();
 	}
 	
 	
@@ -120,24 +124,32 @@ public class Game implements ApplicationListener {
 				ui.showArrows();
 				return;
 			} else if (ui.upArrowPressed(prevX, prevY)) {
-				cam.translate(0, BLOCK_HEIGHT);
-			    cam.update();
-			    CAM_Y_OFFSET++;
+				if (NUM_ROWS + CAM_Y_OFFSET < REAL_ROWS) {
+					cam.translate(0, BLOCK_HEIGHT);
+				    cam.update();
+				    CAM_Y_OFFSET++;
+				}
 				return;
 			} else if (ui.rightArrowPressed(prevX, prevY)) {
-				cam.translate(BLOCK_WIDTH, 0);
-			    cam.update();
-			    CAM_X_OFFSET++;
+				if (NUM_COLS + CAM_X_OFFSET < REAL_COLS) {
+					cam.translate(BLOCK_WIDTH, 0);
+				    cam.update();
+				    CAM_X_OFFSET++;
+				}
 				return;
 			} else if (ui.downArrowPressed(prevX, prevY)) {
-				cam.translate(0, -BLOCK_HEIGHT);
-				cam.update();
-				CAM_Y_OFFSET--;
+				if (CAM_Y_OFFSET > 0) {
+					cam.translate(0, -BLOCK_HEIGHT);
+					cam.update();
+					CAM_Y_OFFSET--;
+				}
 				return;
 			} else if (ui.leftArrowPressed(prevX, prevY)) {
-				cam.translate(-BLOCK_WIDTH, 0);
-				cam.update();
-				CAM_X_OFFSET--;
+				if (CAM_X_OFFSET > 0) {
+					cam.translate(-BLOCK_WIDTH, 0);
+					cam.update();
+					CAM_X_OFFSET--;
+				}
 				return;
 			}
 			
