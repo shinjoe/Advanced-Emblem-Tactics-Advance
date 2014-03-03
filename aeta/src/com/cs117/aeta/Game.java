@@ -32,12 +32,11 @@ public class Game implements ApplicationListener {
 	public static TileMap tilemap;
 	public static UI ui;
 	
-	public static int pid = 0;
-	public static int curTurn = 0;
+	public static int pid = 1;
+	public static int curTurn = 1;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
-	private Rectangle glViewport;
 	
 	private Vector3 touchPos;
 	
@@ -118,8 +117,8 @@ public class Game implements ApplicationListener {
 		    	return;
 			}
 			
-		    cam.translate(0, BLOCK_HEIGHT);
-		    cam.update();
+		    //cam.translate(0, BLOCK_HEIGHT);
+		    //cam.update();
 			
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);
