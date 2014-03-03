@@ -22,6 +22,7 @@ public class ClientThread extends Thread {
 	@Override
 	public void run() {
 		try {
+			// Stop thread if unable to send
 			if (MainActivity.mPeerAddress == null) {
 				mActivity.runOnUiThread(new Runnable() {
 
@@ -37,6 +38,7 @@ public class ClientThread extends Thread {
 			
 			Socket socket = new Socket(MainActivity.mPeerAddress, mPort);
 			
+			// Send client output
 			PrintStream out = new PrintStream(socket.getOutputStream());
 			out.println(mMessage);
 						

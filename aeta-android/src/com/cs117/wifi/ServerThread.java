@@ -30,14 +30,19 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		try {
+			// Create new server socket
 			mServerSocket = new ServerSocket();
 			mServerSocket.setReuseAddress(true);
 			mServerSocket.bind(new InetSocketAddress(mPort));
 			Socket clientSocket = null;
 			
+			// Loop until interrupted/killed
 			currentThread();
 			while (!Thread.interrupted()) {
+				// Accept client connection, will block
 				clientSocket = mServerSocket.accept();
+				
+				// Set peer IP address (group owner only)
 				if (MainActivity.mPeerAddress == null) {
 					String peerAddress = clientSocket.getInetAddress().getHostAddress();
 					MainActivity.mPeerAddress = peerAddress;
@@ -45,11 +50,13 @@ public class ServerThread extends Thread {
 	
 						@Override
 						public void run() {
-							Toast.makeText(mActivity.getApplicationContext(), "Connected to peer w/ IP: " + mActivity.getPeerAddress(), Toast.LENGTH_SHORT).show();
+							Toast.makeText(mActivity.getApplicationContext(), "Connected to peer w/ IP: " + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 						}
 						
 					});
 				}
+				
+				// Read client input
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				mFromClient = in.readLine();
 				
@@ -63,6 +70,8 @@ public class ServerThread extends Thread {
 				clientSocket.close();
 			mServerSocket.close();	
 		} catch (IOException e) {
+			// Server socket can be closed by main thread, ServerSocket.accept() will throw exception
+			// and thread will be stopped here
 			Log.d(MainActivity.TAG, "Server thread exception: " + e.toString());
 			return;
 		}
@@ -73,8 +82,8 @@ public class ServerThread extends Thread {
 
 			@Override
 			public void run() {
-				if (mActivity.getInGame())
-				{	
+				// Perform game-related processing
+				if (mActivity.getInGame()) {	
 					JSONObject fromClient = null;
 					try
 					{	
@@ -84,20 +93,20 @@ public class ServerThread extends Thread {
 													fromClient.getInt("prevX"), fromClient.getInt("prevY"));
 					}
 					catch(JSONException e) {
-						//e.printStackTrace();
-						//System.err.println("receive coord failure");
-						Log.d(MainActivity.TAG, "receive coord failure: " + e.toString());
+						Log.d(MainActivity.TAG, "Receive coord failure: " + e.toString());
 					}
 					
 					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_SHORT).show();
 				}
+				// For connection phase, can probably do without
 				else
-					Toast.makeText(mActivity.getApplicationContext(), mFromClient + " from " + mActivity.getPeerAddress(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mActivity.getApplicationContext(), mFromClient + " from " + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 			}
 			
 		});
 	}
 	
+	// Lets MainActivity stop thread
 	public ServerSocket getServerSocket() {
 		return mServerSocket;
 	}
