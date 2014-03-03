@@ -33,6 +33,8 @@ public class TileMap {
     private ArrayList<Coordinate> attackable;
     
     private BitmapFont font;
+    private BitmapFont hpFont;
+    
     private Texture grassTexture;
     private Texture blueOverlay;
     private Texture redOverlay;
@@ -45,7 +47,7 @@ public class TileMap {
     private ActionResolver AR;
     	
 
-	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font,
+	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
 					ActionResolver ar) {
 		
 		AR = ar;
@@ -87,6 +89,7 @@ public class TileMap {
 		walkable = null;
 		attackable = null;
 		this.font = font;
+		this.hpFont = hpFont;
 	}
 	
 	/** === DRAW FUNCTIONS === **/
@@ -137,6 +140,12 @@ public class TileMap {
 					 c.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
 					 Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
 					 Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+			
+			String hpString = String.valueOf(curUnit.getHp());
+			hpFont.draw(spriteBatch, hpString, 
+						(c.getX()+1) * Game.BLOCK_WIDTH - hpFont.getSpaceWidth()*3,
+						c.getY() * Game.BLOCK_HEIGHT + hpFont.getLineHeight());
+			
 		}
 	}
 	
@@ -184,7 +193,8 @@ public class TileMap {
 		int y = terrain.length - selectedTile.getY() - 1;
 		
 		for (int i = x - atkRange; i <= x + atkRange; i++) {
-			for (int j = y - atkRange; j <= y + atkRange; j++) {
+			int r = Math.abs(Math.abs(i-x)-atkRange);
+			for (int j = y - r; j <= y + r; j++) {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds
@@ -194,6 +204,7 @@ public class TileMap {
 			}
 		}
 	}
+	
 	
 	public void attackWithSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
 		if (attackable != null) {
@@ -259,7 +270,8 @@ public class TileMap {
 		Coordinate unitCoord = new Coordinate(-1, -1);
 		// look at all 8 adjacent squares
 		for (int i = x - moveRnge; i <= x + moveRnge; i++) {
-			for (int j = y - moveRnge; j <= y + moveRnge; j++) {
+			int r = Math.abs(Math.abs(i-x)-moveRnge);
+			for (int j = y - r; j <= y + r; j++) {
 				// skip over self
 				if (i == x && j == y) continue;
 				// make sure we don't go out of bounds

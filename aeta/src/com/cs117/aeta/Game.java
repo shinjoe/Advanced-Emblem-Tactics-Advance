@@ -42,6 +42,7 @@ public class Game implements ApplicationListener {
 	private Vector3 touchPos;
 	
 	private BitmapFont font;
+	private BitmapFont hpFont;
 	private ActionResolver mActionResolver;
 	
 	public Game(ActionResolver actionResolver) {
@@ -61,14 +62,18 @@ public class Game implements ApplicationListener {
 		
 		shapeRenderer = new ShapeRenderer();
 		spriteBatch = new SpriteBatch();
+		
 		font = new BitmapFont(Gdx.files.internal("fonts/font.fnt"));
 		font.setColor(Color.ORANGE);
+		hpFont = new BitmapFont(Gdx.files.internal("fonts/hpFont.fnt"));
+		hpFont.setColor(Color.WHITE);
+		
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.translate(WIDTH/2, HEIGHT/2);
 		cam.update();		
 		//glViewport = new Rectangle(0, 0, WIDTH, HEIGHT);
 		
-		tilemap = new TileMap(shapeRenderer, spriteBatch, font, mActionResolver);
+		tilemap = new TileMap(shapeRenderer, spriteBatch, font, hpFont, mActionResolver);
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
 	}
 	
