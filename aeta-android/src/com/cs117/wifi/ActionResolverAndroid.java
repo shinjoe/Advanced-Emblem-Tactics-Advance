@@ -86,4 +86,17 @@ public class ActionResolverAndroid implements ActionResolver {
 		
 		mActivity.createClientThread(atkRes.toString());
 	}
+	
+	public void sendEndTurn(int nextTurn) {
+		JSONObject turn = new JSONObject();
+		try {
+			turn.put("type", 2);
+			turn.put("turn", nextTurn);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			System.err.println("Send next turn failure");
+		}
+		
+		mActivity.createClientThread(turn.toString());
+	}
 }

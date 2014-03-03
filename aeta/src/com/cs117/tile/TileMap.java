@@ -2,7 +2,7 @@ package com.cs117.tile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.Hashtable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -29,7 +29,7 @@ public class TileMap {
 	private SpriteBatch spriteBatch;
 	
 	private Coordinate selectedTile;
-	private HashMap<Coordinate, Unit> unitMap;
+	private Hashtable<Coordinate, Unit> unitMap;
     private ArrayList<Coordinate> walkable;
     private ArrayList<Coordinate> attackable;
     
@@ -76,7 +76,7 @@ public class TileMap {
 		
 		selectedTile = new Coordinate(-1, -1);
 		
-		unitMap = new HashMap<Coordinate, Unit>();
+		unitMap = new Hashtable<Coordinate, Unit>();
 		// put an infantry unit at (0, 0)
 		unitMap.put(new Coordinate(0, 0), new Infantry(RED_TEAM));
 		// put a tank at (5, 1)
@@ -312,7 +312,7 @@ public class TileMap {
 	
 	
 	
-	public HashMap<Coordinate, Unit> getUnitMap() {
+	public Hashtable<Coordinate, Unit> getUnitMap() {
 		return unitMap;
 	}
 	

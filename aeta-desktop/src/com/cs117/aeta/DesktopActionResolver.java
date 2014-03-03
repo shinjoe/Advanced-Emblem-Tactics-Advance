@@ -28,4 +28,10 @@ public class DesktopActionResolver implements ActionResolver {
 		
 	}
 
+	@Override
+	public void sendEndTurn(int nextTurn) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

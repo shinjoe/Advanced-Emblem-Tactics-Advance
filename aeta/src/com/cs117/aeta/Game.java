@@ -106,7 +106,9 @@ public class Game implements ApplicationListener {
 			
 		    if (ui.endTurnPressed(prevX, prevY)) {
 		    	// TODO: properly send msg over to other side saying "I'm done"
-				return;
+		    	this.curTurn = 1-pid;
+				mActionResolver.sendEndTurn(1-pid);
+		    	return;
 			}
 			
 			
@@ -144,6 +146,10 @@ public class Game implements ApplicationListener {
 	
 	public TileMap getTileMap() {
 		return tilemap;
+	}
+	
+	public void displayTurnReady() {
+		System.out.println("TURN RDYYYY");
 	}
 	
 }

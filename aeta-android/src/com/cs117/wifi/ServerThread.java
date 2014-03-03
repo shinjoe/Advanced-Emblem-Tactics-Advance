@@ -94,9 +94,14 @@ public class ServerThread extends Thread {
 						if(type == 0)
 							curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
 													   fromClient.getInt("prevX"), fromClient.getInt("prevY"));
-						else
+						else if (type == 1)
 							curGame.tilemap.updateUnit(fromClient.getInt("atkedX"), fromClient.getInt("atkedY"),
 													   fromClient.getInt("newHP"));
+						else {
+							curGame.curTurn = fromClient.getInt("turn");
+							curGame.displayTurnReady();
+							Toast.makeText(mActivity.getApplicationContext(), "Your turn", Toast.LENGTH_SHORT).show();
+						}
 					}
 					catch(JSONException e) {
 						e.printStackTrace();

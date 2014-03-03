@@ -1,6 +1,7 @@
 package com.cs117.interaction;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 
 
 import com.badlogic.gdx.Gdx;
@@ -30,7 +31,7 @@ public class UI {
 	private Skin skin;
 	
 	private Coordinate selectedTile;
-	private HashMap<Coordinate, Unit> unitMap;
+	private Hashtable<Coordinate, Unit> unitMap;
 	private Vector2 moveOffset;
 	private Vector2 atkOffset;
 	

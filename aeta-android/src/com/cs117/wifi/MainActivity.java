@@ -126,6 +126,11 @@ public class MainActivity extends AndroidApplication {
 			public void onClick(View v) {
 				if (mWifiP2pEnabled) {
 					// Switch to game mode
+					if (mIsGroupOwner)
+						mGame.pid = 0;
+					else
+						mGame.pid = 1;
+					Toast.makeText(getApplicationContext(), "my pid: " + mGame.pid, Toast.LENGTH_SHORT).show();
 					mInGame = true;
 					setContentView(mGameView);
 				}
