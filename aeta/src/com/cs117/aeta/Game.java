@@ -128,7 +128,7 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
-		} else if (Gdx.input.isKeyPressed(Keys.MENU)) {
+		} else if (Game.curTurn == Game.pid && Gdx.input.isKeyPressed(Keys.MENU)) {
 			ui.showEndTurn();
 		}
 	}
