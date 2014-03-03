@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.cs117.tile.TileMap;
 import com.cs117.connection.ActionResolver;
@@ -25,6 +24,8 @@ public class Game implements ApplicationListener {
 	public static int UNIT_TEXT_Y_OFFSET;
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
+	public static int CAM_X_OFFSET = 0;
+	public static int CAM_Y_OFFSET = 0;
 	
 	public static int WIDTH;
 	public static int HEIGHT;
@@ -105,8 +106,8 @@ public class Game implements ApplicationListener {
 		if (Gdx.input.justTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			
-			int xCoord = (int) touchPos.x / BLOCK_WIDTH;
-			int yCoord = (int) (NUM_ROWS - touchPos.y / BLOCK_HEIGHT);		
+			int xCoord = (int) touchPos.x / BLOCK_WIDTH + CAM_X_OFFSET;
+			int yCoord = (int) (NUM_ROWS - touchPos.y / BLOCK_HEIGHT) + CAM_Y_OFFSET;		
 			
 			int prevX = tilemap.getSelectedTile().getX();
 			int prevY = tilemap.getSelectedTile().getY();
@@ -116,11 +117,31 @@ public class Game implements ApplicationListener {
 				mActionResolver.sendEndTurn(1-pid);
 		    	return;
 			} else if (ui.cameraPressed(prevX, prevY)) {
+				ui.showArrows();
+				return;
+			} else if (ui.upArrowPressed(prevX, prevY)) {
+				cam.translate(0, BLOCK_HEIGHT);
+			    cam.update();
+			    CAM_Y_OFFSET++;
+				return;
+			} else if (ui.rightArrowPressed(prevX, prevY)) {
+				cam.translate(BLOCK_WIDTH, 0);
+			    cam.update();
+			    CAM_X_OFFSET++;
+				return;
+			} else if (ui.downArrowPressed(prevX, prevY)) {
+				cam.translate(0, -BLOCK_HEIGHT);
+				cam.update();
+				CAM_Y_OFFSET--;
+				return;
+			} else if (ui.leftArrowPressed(prevX, prevY)) {
+				cam.translate(-BLOCK_WIDTH, 0);
+				cam.update();
+				CAM_X_OFFSET--;
 				return;
 			}
 			
-		    //cam.translate(0, BLOCK_HEIGHT);
-		    //cam.update();
+		    
 			
 			tilemap.updateSelectedTile(xCoord, yCoord);
 			ui.handleTilePress(xCoord, yCoord);

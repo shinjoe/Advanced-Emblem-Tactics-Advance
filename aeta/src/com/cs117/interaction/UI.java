@@ -16,12 +16,20 @@ import com.cs117.units.Unit;
 
 public class UI {
 	
-	private static final int MENU_WIDGET_HEIGHT = Game.BLOCK_HEIGHT * 2;
-	private static final int MENU_WIDGET_WIDTH = Game.BLOCK_WIDTH * 4;
-	private static final int END_TURN_X = Game.NUM_COLS * Game.BLOCK_WIDTH / 4 + Game.BLOCK_WIDTH / 2;
-	private static final int END_TURN_Y = Game.NUM_ROWS * Game.BLOCK_HEIGHT / 2;
-	private static final int CAM_BTN_X = END_TURN_X;
-	private static final int CAM_BTN_Y = END_TURN_Y - 3 * Game.BLOCK_HEIGHT;
+	private static int MENU_WIDGET_HEIGHT = Game.BLOCK_HEIGHT * 2;
+	private static int MENU_WIDGET_WIDTH = Game.BLOCK_WIDTH * 4;
+	private static int END_TURN_X = Game.NUM_COLS * Game.BLOCK_WIDTH / 4 + Game.BLOCK_WIDTH / 2;
+	private static int END_TURN_Y = Game.NUM_ROWS * Game.BLOCK_HEIGHT / 2;
+	private static int CAM_BTN_X = END_TURN_X;
+	private static int CAM_BTN_Y = END_TURN_Y - 3 * Game.BLOCK_HEIGHT;
+	private static int UP_WIDTH = 2 * Game.BLOCK_WIDTH;
+	private static int UP_HEIGHT = Game.BLOCK_HEIGHT;
+	private static float UP_X = END_TURN_X + Game.BLOCK_WIDTH;
+	private static float UP_Y = END_TURN_Y + 2 * Game.BLOCK_HEIGHT;
+	private static int RIGHT_WIDTH = UP_HEIGHT;
+	private static int RIGHT_HEIGHT = UP_WIDTH;
+	private static float RIGHT_X = 9 * Game.BLOCK_WIDTH;
+	private static float RIGHT_Y = 2 * Game.BLOCK_HEIGHT;
 	
 	
 	private Stage stage;
@@ -32,6 +40,10 @@ public class UI {
 	private TextButton atkBtn;
 	private TextButton endTurnBtn;
 	private TextButton camBtn;
+	private TextButton upBtn;
+	private TextButton rightBtn;
+	private TextButton downBtn;
+	private TextButton leftBtn;
 	private Skin skin;
 	
 	private Coordinate selectedTile;
@@ -54,10 +66,18 @@ public class UI {
 		atkBtn = new TextButton("Attack", buttonStyle);
 		endTurnBtn = new TextButton("End Turn", buttonStyle);
 		camBtn = new TextButton("Move Camera", buttonStyle);
+		upBtn = new TextButton("up", buttonStyle);
+		rightBtn = new TextButton("right", buttonStyle);
+		downBtn = new TextButton("down", buttonStyle);
+		leftBtn = new TextButton("left", buttonStyle);
 		stage.addActor(moveBtn);
 		stage.addActor(atkBtn);
 		stage.addActor(endTurnBtn);
 		stage.addActor(camBtn);
+		stage.addActor(upBtn);
+		stage.addActor(rightBtn);
+		stage.addActor(downBtn);
+		stage.addActor(leftBtn);
 		moveBtn.setVisible(false);
 		moveBtn.setWidth(Game.BLOCK_WIDTH);
 		moveBtn.setHeight(Game.BLOCK_HEIGHT);
@@ -72,6 +92,27 @@ public class UI {
 		camBtn.setHeight(MENU_WIDGET_HEIGHT);
 		camBtn.setX(CAM_BTN_X);
 		camBtn.setY(CAM_BTN_Y);
+		upBtn.setVisible(false);
+		upBtn.setWidth(UP_WIDTH);
+		upBtn.setHeight(UP_HEIGHT);
+		upBtn.setX(UP_X);
+		upBtn.setY(UP_Y);
+		rightBtn.setVisible(false);
+		rightBtn.setWidth(RIGHT_WIDTH);
+		rightBtn.setHeight(RIGHT_HEIGHT);
+		rightBtn.setX(RIGHT_X);
+		rightBtn.setY(RIGHT_Y);
+		downBtn.setVisible(false);
+		downBtn.setWidth(UP_WIDTH);
+		downBtn.setHeight(UP_HEIGHT);
+		downBtn.setX(UP_X);
+		downBtn.setY(Game.BLOCK_HEIGHT);
+		leftBtn.setVisible(false);
+		leftBtn.setWidth(RIGHT_WIDTH);
+		leftBtn.setHeight(RIGHT_HEIGHT);
+		leftBtn.setX(Game.BLOCK_WIDTH);
+		leftBtn.setY(RIGHT_Y);
+		
 		
 		Gdx.input.setInputProcessor(stage);
 		selectedTile = tilemap.getSelectedTile();
@@ -108,6 +149,10 @@ public class UI {
 		}
 		endTurnBtn.setVisible(false);
 		camBtn.setVisible(false);
+		upBtn.setVisible(false);
+		rightBtn.setVisible(false);
+		downBtn.setVisible(false);
+		leftBtn.setVisible(false);
 	}
 	
 	private void calculateAtkBtnOffset(int quadrant) {
@@ -145,6 +190,53 @@ public class UI {
 	public void showMenu() {
 		endTurnBtn.setVisible(true);
 		camBtn.setVisible(true);
+	}
+	
+	public void showArrows() {
+		upBtn.setVisible(true);
+		rightBtn.setVisible(true);
+		downBtn.setVisible(true);
+		leftBtn.setVisible(true);
+	}
+	
+	public boolean upArrowPressed(int prevX, int prevY) {
+		if (upBtn.isPressed()) {
+			System.out.println("UI::up pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean rightArrowPressed(int prevX, int prevY) {
+		if (rightBtn.isPressed()) {
+			System.out.println("UI::right pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean downArrowPressed(int prevX, int prevY) {
+		if (downBtn.isPressed()) {
+			System.out.println("UI::down pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean leftArrowPressed(int prevX, int prevY) {
+		if (leftBtn.isPressed()) {
+			System.out.println("UI::left pressed");
+			selectedTile.setX(prevX);
+			selectedTile.setY(prevY);
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean cameraPressed(int prevX, int prevY) {
