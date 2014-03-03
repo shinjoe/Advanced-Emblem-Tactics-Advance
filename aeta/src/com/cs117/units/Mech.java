@@ -1,28 +1,28 @@
 package com.cs117.units;
 
-public class Infantry extends Unit {
+public class Mech extends Unit{
+
+	private static final int MECH_DEFAULT_HP = 10;
+	private static final int MECH_ATK_STR = 6;
+	private static final int MECH_ATK_RANGE = 2;
+	private static final int MECH_MOVE_RANGE = 2;
 	
-	private static final int INFANTRY_DEFAULT_HP = 10;
-	private static final int INFANTRY_ATK_STR = 4;
-	private static final int INFANTRY_ATK_RANGE = 3;
-	private static final int INFANTRY_MOVE_RANGE = 3;
-	
-	public Infantry(int team) {
-		super(INFANTRY_DEFAULT_HP, team);
-		this.name = "INF";
-		this.attackStr = INFANTRY_ATK_STR;
-		this.atkRange = INFANTRY_ATK_RANGE;
-		this.moveRange = INFANTRY_MOVE_RANGE;
-		this.maxHP = INFANTRY_DEFAULT_HP;
+	public Mech(int team) {
+		super(MECH_DEFAULT_HP, team);
+		this.name = "MECH";
+		this.attackStr = MECH_ATK_STR;
+		this.atkRange = MECH_ATK_RANGE;
+		this.moveRange = MECH_MOVE_RANGE;
+		this.maxHP = MECH_DEFAULT_HP;
 	}
 	
-	public Infantry(int hp, int team) {
+	public Mech(int hp, int team) {
 		super(hp, team);
-		this.name = "INF";
-		this.attackStr = INFANTRY_ATK_STR;
-		this.atkRange = INFANTRY_ATK_RANGE;
-		this.moveRange = INFANTRY_MOVE_RANGE;
-		this.maxHP = INFANTRY_DEFAULT_HP;
+		this.name = "MECH";
+		this.attackStr = MECH_ATK_STR;
+		this.atkRange = MECH_ATK_RANGE;
+		this.moveRange = MECH_MOVE_RANGE;
+		this.maxHP = MECH_DEFAULT_HP;
 	}
 	
 	public void getAttacked(Unit attackingUnit) {
@@ -35,16 +35,16 @@ public class Infantry extends Unit {
 			System.err.println("Invalid HP before attack");
 		
 		if (attackingUnit.getName().equals("INF")) {
-			int damage = (int) (attackingStr * (attackingHP/atkMaxHP));
+			int damage = (int) (attackingStr * (attackingHP/atkMaxHP)*1.5);
 			if (damage < 1) 
 				this.setHp(attackedHP - 1);
 			else 
 				this.setHp(attackedHP - damage);
 		}
 		else if (attackingUnit.getName().equals("TANK")) {
-			int damage = (int) (attackingStr * (attackingHP/atkMaxHP) * 2.5);
-			if (damage < 3)
-				this.setHp(attackedHP - 3);
+			int damage = (int) (attackingStr * (attackingHP/atkMaxHP));
+			if (damage < 2)
+				this.setHp(attackedHP - 2);
 			else
 				this.setHp(attackedHP - damage);
 		}

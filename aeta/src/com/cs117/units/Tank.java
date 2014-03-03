@@ -51,6 +51,14 @@ public class Tank extends Unit {
 			else
 				this.setHp(attackedHP - damage);
 		}
+		else if (attackingUnit.getName().equals("MECH")) 
+		{
+			int damage = (int) (attackingStr * (attackingHP/atkMaxHP)*2.5);
+			if(damage < 3)
+				this.setHp(attackedHP - 3);
+			else
+				this.setHp(attackedHP - damage);
+		}
 		else
 			System.out.println("Invalid Unit attacking");
 	}

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.cs117.aeta.Game;
 import com.cs117.connection.ActionResolver;
 import com.cs117.units.Infantry;
+import com.cs117.units.Mech;
 import com.cs117.units.Tank;
 import com.cs117.units.Unit;
 
@@ -43,6 +44,8 @@ public class TileMap {
     private Texture blue_tank_right;
     private Texture red_inf_right;
     private Texture red_tank_right;
+    private Texture blue_mech_right;
+    private Texture red_mech_right;
     
     private ActionResolver AR;
     	
@@ -72,8 +75,11 @@ public class TileMap {
 		mtnTexture = new Texture(Gdx.files.internal("gfx/mtn.png"));
 		blue_inf_right = new Texture(Gdx.files.internal("gfx/blue_inf_right.png"));
 		blue_tank_right = new Texture(Gdx.files.internal("gfx/blue_tank_right.png"));
+		blue_mech_right = new Texture(Gdx.files.internal("gfx/blue_mech_right.png"));
 		red_inf_right = new Texture(Gdx.files.internal("gfx/red_inf_right.png"));
 		red_tank_right = new Texture(Gdx.files.internal("gfx/red_tank_right.png"));
+		red_mech_right = new Texture(Gdx.files.internal("gfx/red_mech_right.png"));
+		
 		
 		selectedTile = new Coordinate(-1, -1);
 		
@@ -84,6 +90,8 @@ public class TileMap {
 		unitMap.put(new Coordinate(5, 1), new Tank(RED_TEAM));
 		unitMap.put(new Coordinate(1, 3), new Tank(BLUE_TEAM));
 		unitMap.put(new Coordinate(5, 5), new Infantry(BLUE_TEAM));
+		unitMap.put(new Coordinate(6, 2), new Mech(RED_TEAM));
+		unitMap.put(new Coordinate(2, 6), new Mech(BLUE_TEAM));
 		
 		walkable = null;
 		attackable = null;
@@ -159,7 +167,13 @@ public class TileMap {
 				return red_tank_right;
 			else 
 				return blue_tank_right;
-		} else return null;
+		} else if (curUnit.getName().equals("MECH")){
+			if(curUnit.getTeam() == RED_TEAM)
+				return red_mech_right;
+			else
+				return blue_mech_right;
+		}
+		else return null;
 	}
 
 	public void updateSelectedTile(int xCoord, int yCoord) {
