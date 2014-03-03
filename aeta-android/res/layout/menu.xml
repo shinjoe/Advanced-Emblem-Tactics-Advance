@@ -17,16 +17,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="@string/discover_peers" />
 
         <Button
             android:id="@+id/group_button"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?android:attr/buttonBarStyle"
             android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="@string/create_group" />
+
+        <Button
+            android:id="@+id/disconnect_button"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/disconnect" />
 
         <Button
             android:id="@+id/play_button"
@@ -35,32 +47,7 @@
             style="?android:attr/buttonBarStyle"
             android:text="@string/play" />
 
-        <Button
-            android:id="@+id/disconnect_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/buttonBarStyle"
-            android:text="@string/disconnect" />
-
-        <Button
-            android:id="@+id/test_button"
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/test" />
-
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:text="@string/instructions" >
-
-        <requestFocus />
-    </EditText>
 
     <ListView
         android:id="@+id/peer_list"

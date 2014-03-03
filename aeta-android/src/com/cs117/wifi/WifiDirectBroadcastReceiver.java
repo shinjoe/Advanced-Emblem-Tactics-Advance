@@ -33,6 +33,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 	
 	private ArrayList<WifiP2pDevice> peers;
 
+	// PeerListListener updates peer list in MainActivity on event
     private PeerListListener peerListListener = new PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
@@ -44,9 +45,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             
             if (peers.size() == 0) {
             	Toast.makeText(mActivity.getApplicationContext(), "No friends. :(", Toast.LENGTH_SHORT).show();
-            }
-            else {
-            	Toast.makeText(mActivity.getApplicationContext(), "Friends! :)", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -69,6 +67,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 			if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 				Toast.makeText(context, "Wi-Fi Direct Enabled", Toast.LENGTH_SHORT).show();
 				mActivity.setIsWifiP2pEnabled(true);
+				mActivity.discoverPeers();
 				if (mManager != null)
 					mManager.requestPeers(mChannel, peerListListener);
 			} else {
@@ -86,27 +85,17 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 				// Get network info
 				NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 				
-				if (networkInfo.isAvailable()) {
-					Toast.makeText(context, "Well, there's someone there...", Toast.LENGTH_SHORT).show();
-				}
-				
-				if (networkInfo.isConnectedOrConnecting()) {
-					Toast.makeText(context, "Any second now... Any second...", Toast.LENGTH_SHORT).show();
-				}
-				
 				if (networkInfo.isConnected()) {
-					// Create server and client threads in MainActivity
-					Toast.makeText(context, "ZOMG, it actually connected!", Toast.LENGTH_SHORT).show();
 					mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
 						
 						@Override
 						public void onConnectionInfoAvailable(WifiP2pInfo info) {
 							// Get group owner IP address
 							String ownerAddr = info.groupOwnerAddress.getHostAddress();
-							Toast.makeText(context, "owner IP: " + ownerAddr, Toast.LENGTH_LONG).show();
 							
 							mManager.requestPeers(mChannel, peerListListener);
 							
+							// Create server and client threads in MainActivity
 							if (info.groupFormed && info.isGroupOwner) {
 								Toast.makeText(context, "I AM GROUP OWNER!!", Toast.LENGTH_SHORT).show();
 								mActivity.setIsGroupOwner(true);
@@ -114,8 +103,12 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 							} else if (info.groupFormed) {
 								Toast.makeText(context, "...I'm not the group owner... *sniffle*", Toast.LENGTH_SHORT).show();
 								mActivity.setIsGroupOwner(false);
-								mActivity.setPeerAddress(ownerAddr);
+								// Peer is group owner
+								MainActivity.mPeerAddress = ownerAddr;
 								mActivity.createServerThread();
+								mActivity.createClientThread("\"I challenge you!!\"");
+							} else {
+								Toast.makeText(context, "Group not formed.", Toast.LENGTH_SHORT).show();
 							}
 						}
 					});
@@ -125,6 +118,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			// Respond to this device's Wi-Fi state changing
+			
 		}
 	}
 }

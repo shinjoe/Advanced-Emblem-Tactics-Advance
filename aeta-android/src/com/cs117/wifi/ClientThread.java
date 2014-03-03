@@ -4,18 +4,17 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
+import android.util.Log;
 import android.widget.Toast;
 
 public class ClientThread extends Thread {
 
 	private MainActivity mActivity;
-	private String mPeerAddress = "";
 	private String mMessage = "";
 	private int mPort = 0;
 	
-	public ClientThread(MainActivity activity, String peerAddress, String msg, int port) {
+	public ClientThread(MainActivity activity, String msg, int port) {
 		this.mActivity = activity;
-		this.mPeerAddress = peerAddress;
 		this.mMessage = msg;
 		this.mPort = port;
 	}
@@ -23,12 +22,13 @@ public class ClientThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			if (mPeerAddress.equals("")) {
+			// Stop thread if unable to send
+			if (MainActivity.mPeerAddress == null) {
 				mActivity.runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						Toast.makeText(mActivity.getApplicationContext(), "No peer IP address.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mActivity.getApplicationContext(), "No peer IP address." + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -36,14 +36,16 @@ public class ClientThread extends Thread {
 				return;
 			}
 			
-			Socket socket = new Socket(mPeerAddress, mPort);
+			Socket socket = new Socket(MainActivity.mPeerAddress, mPort);
 			
+			// Send client output
 			PrintStream out = new PrintStream(socket.getOutputStream());
 			out.println(mMessage);
 						
 			out.close();
 			socket.close();
 		} catch (IOException e) {
+			Log.d(MainActivity.TAG, "Client thread exception: " + e.toString());
 			return;
 		}
 	}

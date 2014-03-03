@@ -142,4 +142,8 @@ public class Game implements ApplicationListener {
 		shapeRenderer.dispose();
 	}
 	
+	public TileMap getTileMap() {
+		return tilemap;
+	}
+	
 }
