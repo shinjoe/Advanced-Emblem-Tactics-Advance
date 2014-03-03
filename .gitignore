@@ -14,4 +14,6 @@ gen/
 aeta-android/bin/
 aeta-android/bin/classes/com/cs117/aeta/R$layout.class
 aeta-android/bin/classes/com/cs117/aeta/R$string.class
+aeta-android/bin/classes/com/cs117/aeta/R$attr.class
+aeta-android/bin/classes/com/cs117/aeta/R$drawable.class
 aeta-android/bin/jarlist.cache
