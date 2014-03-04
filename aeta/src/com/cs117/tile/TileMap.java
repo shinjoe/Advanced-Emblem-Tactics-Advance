@@ -149,6 +149,8 @@ public class TileMap {
 		Texture curTexture = null;
 		for (Coordinate c : unitMap.keySet()) {
 			Unit curUnit = unitMap.get(c);
+			// unit deleted by other player, hashmap already updated
+			if (curUnit == null) continue;
 			curTexture = resolveTexture(curUnit);
 			
 			spriteBatch.draw(curTexture, c.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
