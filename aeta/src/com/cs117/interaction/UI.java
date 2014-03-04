@@ -187,8 +187,11 @@ public class UI {
 		moveOffset.set(x_offset, y_offset);
 	}
 	
-	public void showMenu() {
+	public void showEndTurn() {
 		endTurnBtn.setVisible(true);
+	}
+	
+	public void showMoveCamera() {
 		camBtn.setVisible(true);
 	}
 	

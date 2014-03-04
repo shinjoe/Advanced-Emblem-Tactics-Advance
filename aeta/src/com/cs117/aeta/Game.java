@@ -35,8 +35,8 @@ public class Game implements ApplicationListener {
 	public static TileMap tilemap;
 	public static UI ui;
 	
-	public static int pid = 1;
-	public static int curTurn = 1;
+	public static int pid = 0;
+	public static int curTurn = 0;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 	private OrthographicCamera cam;
@@ -172,8 +172,11 @@ public class Game implements ApplicationListener {
 			System.out.println("Touch/Click detected");
 			System.out.println("X " + touchPos.x);
 			System.out.println("Y " + touchPos.y);
-		} else if (Game.curTurn == Game.pid && Gdx.input.isKeyPressed(Keys.MENU)) {
-			ui.showMenu();
+		} else if (Gdx.input.isKeyPressed(Keys.MENU)) {
+			ui.showMoveCamera();
+			if (Game.curTurn == Game.pid) {
+				ui.showEndTurn();
+			}
 		}
 	}
 	
