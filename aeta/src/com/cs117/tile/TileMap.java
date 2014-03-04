@@ -30,6 +30,9 @@ public class TileMap {
 	
 	private Coordinate selectedTile;
 	private ConcurrentHashMap<Coordinate, Unit> unitMap;
+	private int numRed;
+	private int numBlue;
+	
     private ArrayList<Coordinate> walkable;
     private ArrayList<Coordinate> attackable;
     
@@ -46,6 +49,8 @@ public class TileMap {
     private Texture red_tank_right;
     private Texture blue_mech_right;
     private Texture red_mech_right;
+    private Texture victory;
+    private Texture defeat;
     
     private ActionResolver AR;
     	
@@ -80,19 +85,21 @@ public class TileMap {
 		red_inf_right = new Texture(Gdx.files.internal("gfx/red_inf_right.png"));
 		red_tank_right = new Texture(Gdx.files.internal("gfx/red_tank_right.png"));
 		red_mech_right = new Texture(Gdx.files.internal("gfx/red_mech_right.png"));
-		
+		victory = new Texture(Gdx.files.internal("gfx/victory.png"));
+		defeat = new Texture(Gdx.files.internal("gfx/lose.png"));
 		
 		selectedTile = new Coordinate(-1, -1);
 		
 		unitMap = new ConcurrentHashMap<Coordinate, Unit>();
-		// put an infantry unit at (0, 0)
 		unitMap.put(new Coordinate(0, 0), new Infantry(RED_TEAM));
-		// put a tank at (5, 1)
 		unitMap.put(new Coordinate(5, 1), new Tank(RED_TEAM));
 		unitMap.put(new Coordinate(1, 3), new Tank(BLUE_TEAM));
 		unitMap.put(new Coordinate(5, 5), new Infantry(BLUE_TEAM));
 		unitMap.put(new Coordinate(6, 2), new Mech(RED_TEAM));
 		unitMap.put(new Coordinate(2, 6), new Mech(BLUE_TEAM));
+		
+		numRed = 3;
+		numBlue = 3;
 		
 		walkable = null;
 		attackable = null;
@@ -154,6 +161,25 @@ public class TileMap {
 						(c.getX()+1) * Game.BLOCK_WIDTH - hpFont.getSpaceWidth()*3,
 						c.getY() * Game.BLOCK_HEIGHT + hpFont.getLineHeight());
 			
+		}
+	}
+	
+	public void drawVictory(int x, int y, int pid, float xoff, float yoff){
+		float xPos = x/3 + xoff;
+		float yPos = y/3 + yoff;
+		if(numRed == 0)
+		{
+			if(pid == 1)
+				spriteBatch.draw(victory, xPos, yPos);
+			else
+				spriteBatch.draw(defeat, xPos, yPos);
+		}
+		else if(numBlue == 0)
+		{
+			if(pid == 1)
+				spriteBatch.draw(defeat, xPos, yPos);
+			else
+				spriteBatch.draw(victory, xPos, yPos);
 		}
 	}
 	
@@ -230,7 +256,13 @@ public class TileMap {
 					
 					attacked.getAttacked(attacking);
 					if(attacked.getHp() <= 0)
+					{
+						if(attacked.getTeam() == RED_TEAM)
+							--numRed;
+						else
+							--numBlue;
 						unitMap.remove(c);
+					}
 					
 					atkSynch(c.getX(), c.getY(), attacked.getHp());
 					
@@ -252,7 +284,13 @@ public class TileMap {
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
 		if(newHP <= 0)
+		{
+			if(atked.getTeam() == RED_TEAM)
+				--numRed;
+			else
+				--numBlue;
 			unitMap.remove(atkedC);
+		}
 		else
 			atked.setHp(newHP);
 	}
@@ -351,8 +389,6 @@ public class TileMap {
 	public int getNumTilemapCols() {
 		return terrain[0].length;
 	}
-	
-	
 	
 
 }

@@ -102,6 +102,8 @@ public class Game implements ApplicationListener {
 		tilemap.drawAttackable();
 		//tilemap.__DEBUG_drawUnitString();
 		tilemap.drawUnits();
+		tilemap.drawVictory(WIDTH, HEIGHT, pid,
+							CAM_X_OFFSET*BLOCK_WIDTH, CAM_Y_OFFSET*BLOCK_HEIGHT);
 		spriteBatch.end();
 		
 		ui.draw();
