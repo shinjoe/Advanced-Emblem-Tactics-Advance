@@ -54,6 +54,7 @@ public class TileMap {
     
     private ActionResolver AR;
     	
+    private boolean gameOver;
 
 	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
 					ActionResolver ar) {
@@ -105,6 +106,8 @@ public class TileMap {
 		attackable = null;
 		this.font = font;
 		this.hpFont = hpFont;
+		
+		this.gameOver = false;
 	}
 	
 	/** === DRAW FUNCTIONS === **/
@@ -263,6 +266,8 @@ public class TileMap {
 							--numRed;
 						else
 							--numBlue;
+						if(numRed == 0 || numBlue == 0)
+							gameOver = true;
 						unitMap.remove(c);
 					}
 					
@@ -291,6 +296,8 @@ public class TileMap {
 				--numRed;
 			else
 				--numBlue;
+			if(numRed == 0 || numBlue == 0)
+				gameOver = true;
 			unitMap.remove(atkedC);
 		}
 		else
@@ -391,6 +398,12 @@ public class TileMap {
 	public int getNumTilemapCols() {
 		return terrain[0].length;
 	}
+	
+	public boolean getGameOver()
+	{
+		return gameOver;
+	}
+
 	
 
 }
