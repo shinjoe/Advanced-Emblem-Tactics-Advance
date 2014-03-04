@@ -43,6 +43,7 @@ public class TileMap {
     private Texture blueOverlay;
     private Texture redOverlay;
     private Texture mtnTexture;
+    private Texture forestTexture;
     private Texture blue_inf_right;
     private Texture blue_tank_right;
     private Texture red_inf_right;
@@ -67,7 +68,7 @@ public class TileMap {
 				{0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0},
 				{0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0},
 				{1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
-				{1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0},
+				{1, 1, 1, 1, 2, 2, 1, 1, 0, 1, 0},
 				{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 				{0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0},
 				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -80,6 +81,7 @@ public class TileMap {
 		blueOverlay = new Texture(Gdx.files.internal("gfx/blueOverlay.png"));
 		redOverlay = new Texture(Gdx.files.internal("gfx/redOverlay.png"));
 		mtnTexture = new Texture(Gdx.files.internal("gfx/mtn.png"));
+		forestTexture = new Texture(Gdx.files.internal("gfx/forest.png"));
 		blue_inf_right = new Texture(Gdx.files.internal("gfx/blue_inf_right.png"));
 		blue_tank_right = new Texture(Gdx.files.internal("gfx/blue_tank_right.png"));
 		blue_mech_right = new Texture(Gdx.files.internal("gfx/blue_mech_right.png"));
@@ -119,6 +121,8 @@ public class TileMap {
 					curTexture = grassTexture;
 				else if (terrain[i][j] == 0) 
 					curTexture = mtnTexture;
+				else if (terrain[i][j] == 2)
+					curTexture = forestTexture;
 						
 				spriteBatch.draw(curTexture, j * Game.BLOCK_WIDTH + Game.TILE_OFFSET,  
 						           Game.BLOCK_HEIGHT * (terrain.length - 1) - i * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
