@@ -173,18 +173,16 @@ public class TileMap {
 		}
 	}
 	
-	public void drawVictory(int x, int y, int pid, float xoff, float yoff){
+	public void drawVictory(int x, int y, int pid, float xoff, float yoff) {
 		float xPos = x/3 + xoff;
 		float yPos = y/3 + yoff;
-		if(numRed == 0)
-		{
+		if(numRed == 0) {
 			if(pid == 1)
 				spriteBatch.draw(victory, xPos, yPos);
 			else
 				spriteBatch.draw(defeat, xPos, yPos);
 		}
-		else if(numBlue == 0)
-		{
+		else if(numBlue == 0) {
 			if(pid == 1)
 				spriteBatch.draw(defeat, xPos, yPos);
 			else
@@ -264,8 +262,7 @@ public class TileMap {
 					Unit attacking = unitMap.get(currUnit);
 					
 					attacked.getAttacked(attacking);
-					if(attacked.getHp() <= 0)
-					{
+					if(attacked.getHp() <= 0) {
 						if(attacked.getTeam() == RED_TEAM)
 							--numRed;
 						else
@@ -285,17 +282,14 @@ public class TileMap {
 		}
 	}
 	
-	public void atkSynch(int atkedX, int atkedY, int newHP)
-	{
+	public void atkSynch(int atkedX, int atkedY, int newHP) {
 		AR.sendAtkRes(atkedX, atkedY, newHP);
 	}
 	
-	public void updateUnit(int atkedX, int atkedY, int newHP)
-	{
+	public void updateUnit(int atkedX, int atkedY, int newHP) {
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
-		if(newHP <= 0)
-		{
+		if(newHP <= 0) {
 			if(atked.getTeam() == RED_TEAM)
 				--numRed;
 			else

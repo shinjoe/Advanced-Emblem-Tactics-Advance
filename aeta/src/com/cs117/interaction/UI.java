@@ -135,13 +135,13 @@ public class UI {
 			int quadrant = selectedTile.getQuadrant();
 			
 			calculateMoveBtnOffset(quadrant);
-			moveBtn.setX(xCoord * Game.BLOCK_WIDTH  + moveOffset.x);
-			moveBtn.setY(yCoord * Game.BLOCK_HEIGHT + moveOffset.y);
+			moveBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH  + moveOffset.x);
+			moveBtn.setY((yCoord - Game.CAM_Y_OFFSET ) * Game.BLOCK_HEIGHT + moveOffset.y);
 			moveBtn.setVisible(true);
 			
 			calculateAtkBtnOffset(quadrant);
-			atkBtn.setX(xCoord * Game.BLOCK_WIDTH + atkOffset.x);
-			atkBtn.setY(yCoord * Game.BLOCK_HEIGHT + atkOffset.y);
+			atkBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH + atkOffset.x);
+			atkBtn.setY((yCoord - Game.CAM_Y_OFFSET) * Game.BLOCK_HEIGHT + atkOffset.y);
 			atkBtn.setVisible(true);
 		} else {
 			moveBtn.setVisible(false);
