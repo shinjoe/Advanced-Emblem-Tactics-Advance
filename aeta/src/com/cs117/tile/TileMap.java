@@ -343,7 +343,7 @@ public class TileMap {
 					// 1 is passable, 0 impassable terrain for now
 					// also check to see if a unit isn't there -- stacking not allowed
 					if ((terrain[j][i] == 1 && !unitMap.containsKey(unitCoord)) || 
-						(terrain[j][i] == 0 && selUnit.isMntnClimber() && !unitMap.containsKey(unitCoord))) {
+						((terrain[j][i] == 0 || terrain[j][i] == 2) && selUnit.isMntnClimber() && !unitMap.containsKey(unitCoord))) {
 						// transform coordinate back
 						walkable.add(new Coordinate(i, terrain.length - j - 1));		
 					}
