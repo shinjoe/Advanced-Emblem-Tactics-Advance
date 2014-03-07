@@ -248,55 +248,6 @@ public class TileMap {
 			else return null;
 		}
 	}
-	
-	/**
-	 * Overloaded version of resolveTexture to account for orientation
-	 * @param curUnit : current unit selected
-	 * @param orientation : direction unit should be facing
-	 * @return updated texture with correct orientation of unit
-	 */
-	
-	private Texture resolveTexture(Unit curUnit, String orientation) {
-		if(orientation.equals("left")) {
-			if (curUnit.getName().equals("INF")) {
-				if (curUnit.getTeam() == RED_TEAM)
-					return red_inf_right;
-				else
-					return blue_inf_right;
-			} else if (curUnit.getName().equals("TANK")) {
-				if (curUnit.getTeam() == RED_TEAM)
-					return red_tank_right;
-				else 
-					return blue_tank_right;
-			} else if (curUnit.getName().equals("MECH")){
-				if(curUnit.getTeam() == RED_TEAM)
-					return red_mech_right;
-				else
-					return blue_mech_right;
-			}
-			else return null;
-		}
-		else {
-			if (curUnit.getName().equals("INF")) {
-				if (curUnit.getTeam() == RED_TEAM)
-					return red_inf_left;
-				else
-					return blue_inf_left;
-			} else if (curUnit.getName().equals("TANK")) {
-				if (curUnit.getTeam() == RED_TEAM)
-					return red_tank_left;
-				else 
-					return blue_tank_left;
-			} else if (curUnit.getName().equals("MECH")){
-				if(curUnit.getTeam() == RED_TEAM)
-					return red_mech_left;
-				else
-					return blue_mech_left;
-			}
-			else return null;
-		}
-	}
-
 
 	public void updateSelectedTile(int xCoord, int yCoord) {
 		// only toggle if selected coordinates are different from previous
