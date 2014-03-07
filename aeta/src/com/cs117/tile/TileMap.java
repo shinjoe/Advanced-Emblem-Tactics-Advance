@@ -185,10 +185,6 @@ public class TileMap {
 		}
 	}
 	
-	public void drawUnits(String orientation) {
-		
-	}
-	
 	public void drawVictory(int x, int y, int pid, float xoff, float yoff){
 		float xPos = x/3 + xoff;
 		float yPos = y/3 + yoff;
