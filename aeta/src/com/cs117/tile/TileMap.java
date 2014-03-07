@@ -261,6 +261,9 @@ public class TileMap {
 					Coordinate currUnit = new Coordinate(prevX, prevY);
 					Unit attacking = unitMap.get(currUnit);
 					
+					if(attacking.getTeam() == attacked.getTeam())
+						break;
+					
 					attacked.getAttacked(attacking);
 					if(attacked.getHp() <= 0) {
 						if(attacked.getTeam() == RED_TEAM)
