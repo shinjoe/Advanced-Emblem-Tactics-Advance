@@ -23,7 +23,7 @@ public class inf_explosion implements ApplicationListener{
 	
 	@Override
 	public void create(){
-		expSheet = new Texture(Gdx.files.internal("infantryAttackExplosion.png"));
+		expSheet = new Texture(Gdx.files.internal("gfx/infantryAttackExplosion.png"));
 		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth(),expSheet.getHeight());
 		expFrames = new TextureRegion[FRAME_COLS*FRAME_ROWS];
 		int index = 0;

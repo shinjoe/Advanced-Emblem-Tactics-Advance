@@ -23,7 +23,7 @@ public class tank_explosion implements ApplicationListener{
 	
 	@Override
 	public void create(){
-		expSheet = new Texture(Gdx.files.internal("tankAttackExplosion.png"));
+		expSheet = new Texture(Gdx.files.internal("gfx/tankAttackExplosion.png"));
 		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth(),expSheet.getHeight());
 		expFrames = new TextureRegion[FRAME_COLS*FRAME_ROWS];
 		int index = 0;
