@@ -16,7 +16,7 @@ public class mech_explosion implements ApplicationListener{
 	
 	Animation mechExpAnimation;
 	Texture   expSheet;
-	static TextureRegion[] expFrames;
+	TextureRegion[] expFrames;
 	SpriteBatch     spriteBatch;
 	TextureRegion   currentFrame;
 	
