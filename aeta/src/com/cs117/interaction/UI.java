@@ -134,15 +134,20 @@ public class UI {
 			Game.pid == Game.curTurn) {
 			int quadrant = selectedTile.getQuadrant();
 			
+			Unit curUnit = unitMap.get(selectedTile);
 			calculateMoveBtnOffset(quadrant);
-			moveBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH  + moveOffset.x);
-			moveBtn.setY((yCoord - Game.CAM_Y_OFFSET ) * Game.BLOCK_HEIGHT + moveOffset.y);
-			moveBtn.setVisible(true);
+			if (curUnit.getMvCount() > 0) {
+				moveBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH  + moveOffset.x);
+				moveBtn.setY((yCoord - Game.CAM_Y_OFFSET ) * Game.BLOCK_HEIGHT + moveOffset.y);
+				moveBtn.setVisible(true);
+			}
 			
-			calculateAtkBtnOffset(quadrant);
-			atkBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH + atkOffset.x);
-			atkBtn.setY((yCoord - Game.CAM_Y_OFFSET) * Game.BLOCK_HEIGHT + atkOffset.y);
-			atkBtn.setVisible(true);
+			if (curUnit.getAtkCount() > 0) {
+				calculateAtkBtnOffset(quadrant);
+				atkBtn.setX((xCoord - Game.CAM_X_OFFSET) * Game.BLOCK_WIDTH + atkOffset.x);
+				atkBtn.setY((yCoord - Game.CAM_Y_OFFSET) * Game.BLOCK_HEIGHT + atkOffset.y);
+				atkBtn.setVisible(true);
+			}
 		} else {
 			moveBtn.setVisible(false);
 			atkBtn.setVisible(false);
