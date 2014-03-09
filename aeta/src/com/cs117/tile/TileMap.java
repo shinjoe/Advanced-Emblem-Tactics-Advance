@@ -36,6 +36,8 @@ public class TileMap {
     private BitmapFont font;
     private BitmapFont hpFont;
     
+    private mech_tank_death mechDeath;
+    private soldier_death infDeath;
     private Texture grassTexture;
     private Texture blueOverlay;
     private Texture redOverlay;
@@ -271,7 +273,20 @@ public class TileMap {
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
 		if(newHP <= 0)
+		{
+			if (atked.getName() == "MECH" || atked.getName() == "TANK")
+			{  
+				mechDeath.create(); 
+				mechDeath.renderAt(atkedX,atkedY);
+			}
+			
+			else if (atked.getName() == "INF")
+			{
+				infDeath.create();
+				infDeath.renderAt(atkedX,atkedY);
+			}
 			unitMap.remove(atkedC);
+		}
 		else
 			atked.setHp(newHP);
 	}

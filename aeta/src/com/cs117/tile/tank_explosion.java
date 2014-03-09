@@ -32,7 +32,7 @@ public class tank_explosion implements ApplicationListener{
 		    	 expFrames[index++] = tmp[i][j];
 		     }
 		}
-		tankExpAnimation = new Animation(0.025f,expFrames);
+		tankExpAnimation = new Animation(0.15f,expFrames);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	

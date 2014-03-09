@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.cs117.aeta.Game;
 
 
 public class inf_explosion implements ApplicationListener{
@@ -32,7 +33,7 @@ public class inf_explosion implements ApplicationListener{
 		    	 expFrames[index++] = tmp[i][j];
 		     }
 		}
-		infExpAnimation = new Animation(0.025f,expFrames);
+		infExpAnimation = new Animation(0.15f,expFrames);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	
@@ -40,13 +41,14 @@ public class inf_explosion implements ApplicationListener{
 		
 	}
 	
-	@Override
-	public void render(){
+	public void renderAt(int X,int Y){
 		 Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);                        // #14
 	        stateTime += Gdx.graphics.getDeltaTime();           // #15
 	        currentFrame = infExpAnimation.getKeyFrame(stateTime, true);  // #16
 	        spriteBatch.begin();
-	        spriteBatch.draw(currentFrame, 50, 50);             // #17
+	        spriteBatch.draw(currentFrame, X*Game.BLOCK_WIDTH+Game.TILE_OFFSET, 
+	        							   Y*Game.BLOCK_HEIGHT+Game.TILE_OFFSET, 
+	        							   Game.BLOCK_WIDTH - Game.TILE_OFFSET,Game.BLOCK_HEIGHT - Game.TILE_OFFSET);             // #17
 	        spriteBatch.end();	
 		
 			
@@ -72,6 +74,12 @@ public class inf_explosion implements ApplicationListener{
 
 	@Override
 	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render() {
 		// TODO Auto-generated method stub
 		
 	}
