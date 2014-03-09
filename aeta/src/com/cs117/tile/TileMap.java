@@ -191,19 +191,21 @@ public class TileMap {
 	}
 	
 	public void drawVictory(int x, int y, int pid, float xoff, float yoff) {
-		float xPos = x/10 + xoff;//x/3 + xoff;
-		float yPos = y/10 + yoff;//y/3 + yoff;
 		if(numRed == 0) {
 			if(pid == BLUE_TEAM)
-				spriteBatch.draw(victoryB, xPos, yPos);
+				spriteBatch.draw(victoryB, (x/2 - victoryB.getWidth()/2 + xoff), 
+								 y/2 - victoryB.getHeight()/2 + yoff);
 			else
-				spriteBatch.draw(defeatR, xPos, yPos);
+				spriteBatch.draw(defeatR, (x/2 - defeatR.getWidth()/2 + xoff), 
+						 		 y/2 - defeatR.getHeight()/2 + yoff);
 		}
 		else if(numBlue == 0) {
 			if(pid == RED_TEAM)
-				spriteBatch.draw(victoryR, xPos, yPos);
+				spriteBatch.draw(victoryR, (x/2 - victoryR.getWidth()/2 + xoff), 
+						 		 y/2 - victoryR.getHeight()/2 + yoff);
 			else
-				spriteBatch.draw(defeatB, xPos, yPos);
+				spriteBatch.draw(defeatB, (x/2 - defeatB.getWidth()/2 + xoff), 
+						 		 y/2 - defeatB.getHeight()/2 + yoff);
 		}
 	}
 	
