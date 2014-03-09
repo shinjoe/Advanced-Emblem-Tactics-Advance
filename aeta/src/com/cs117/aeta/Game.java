@@ -122,6 +122,7 @@ public class Game implements ApplicationListener {
 		    if (ui.endTurnPressed(prevX, prevY)) {
 		    	this.curTurn = 1-pid;
 				mActionResolver.sendEndTurn(1-pid);
+				tilemap.resetMvAtkCounts();
 		    	return;
 			} else if (ui.cameraPressed(prevX, prevY)) {
 				ui.showArrows();

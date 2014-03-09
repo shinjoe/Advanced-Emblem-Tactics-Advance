@@ -14,6 +14,8 @@ public class Tank extends Unit {
 		this.atkRange = TANK_ATK_RANGE;
 		this.moveRange = TANK_MOVE_RANGE;
 		this.maxHP = TANK_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public Tank(int hp, int team) {
@@ -23,6 +25,8 @@ public class Tank extends Unit {
 		this.atkRange = TANK_ATK_RANGE;
 		this.moveRange = TANK_MOVE_RANGE;
 		this.maxHP = TANK_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public void getAttacked(Unit attackingUnit) {

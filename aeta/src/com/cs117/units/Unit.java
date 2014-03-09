@@ -8,6 +8,8 @@ public abstract class Unit {
 	protected int moveRange;
 	protected int maxHP;
 	protected char orientation;
+	protected int mvCount;
+	protected int atkCount;
 	
 	// 0 -> red; 1 -> blue
 	protected int team;
@@ -67,6 +69,22 @@ public abstract class Unit {
 	
 	public void setOrientation(char orientation) {
 		this.orientation = orientation;
+	}
+	
+	public void setMvCount(int mvCount) {
+		this.mvCount = mvCount;
+	}
+	
+	public int getMvCount() {
+		return mvCount;
+	}
+	
+	public void setAtkCount(int atkCount) {
+		this.atkCount = atkCount;
+	}
+	
+	public int getAtkCount() {
+		return atkCount;
 	}
 	
 	public String toString() {

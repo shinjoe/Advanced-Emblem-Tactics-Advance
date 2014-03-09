@@ -14,6 +14,8 @@ public class Infantry extends Unit {
 		this.atkRange = INFANTRY_ATK_RANGE;
 		this.moveRange = INFANTRY_MOVE_RANGE;
 		this.maxHP = INFANTRY_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public Infantry(int hp, int team) {
@@ -23,6 +25,8 @@ public class Infantry extends Unit {
 		this.atkRange = INFANTRY_ATK_RANGE;
 		this.moveRange = INFANTRY_MOVE_RANGE;
 		this.maxHP = INFANTRY_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public void getAttacked(Unit attackingUnit) {

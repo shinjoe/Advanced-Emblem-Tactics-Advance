@@ -185,6 +185,16 @@ public class TileMap {
 		}
 	}
 	
+	public void resetMvAtkCounts() {
+		for (Coordinate c: unitMap.keySet()) {
+			Unit curUnit = unitMap.get(c);
+			if (curUnit.getTeam() == Game.pid) {
+				curUnit.setMvCount(1);
+				curUnit.setAtkCount(1);
+			}
+		}
+	}
+	
 	public void drawVictory(int x, int y, int pid, float xoff, float yoff) {
 		float xPos = x/3 + xoff;
 		float yPos = y/3 + yoff;
@@ -296,6 +306,8 @@ public class TileMap {
 					
 					if(attacking.getTeam() == attacked.getTeam())
 						break;
+					if(attacking.getAtkCount() == 0)
+						break;
 					
 					updateOrientation(attacking, xCoord, prevX);
 					attacked.getAttacked(attacking);
@@ -310,6 +322,9 @@ public class TileMap {
 					}
 					
 					atkSynch(c.getX(), c.getY(), attacked.getHp());
+					
+					attacking.setAtkCount(0);
+					attacking.setMvCount(0);
 					
 					attackable = null;
 					break;
@@ -393,11 +408,19 @@ public class TileMap {
 		if (walkable != null) {
 			for (Coordinate c : walkable) {
 				if (c.equals(selectedTile)) {
+					Coordinate currUnit = new Coordinate(prevX, prevY);
+					Unit moving = unitMap.get(currUnit);
+					if (moving.getMvCount() == 0)
+						break;
+					
 					updateUnit(xCoord, yCoord, prevX, prevY);
 					System.out.println("removing : ");
 					System.out.println(c);
 					// sync with other phone for now
 					moveSynchronize(xCoord, yCoord, prevX, prevY);
+					
+					moving.setMvCount(0);
+					
 					walkable = null;
 					break;
 				}

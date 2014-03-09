@@ -14,6 +14,8 @@ public class Mech extends Unit{
 		this.atkRange = MECH_ATK_RANGE;
 		this.moveRange = MECH_MOVE_RANGE;
 		this.maxHP = MECH_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public Mech(int hp, int team) {
@@ -23,6 +25,8 @@ public class Mech extends Unit{
 		this.atkRange = MECH_ATK_RANGE;
 		this.moveRange = MECH_MOVE_RANGE;
 		this.maxHP = MECH_DEFAULT_HP;
+		this.mvCount = 1;
+		this.atkCount = 1;
 	}
 	
 	public void getAttacked(Unit attackingUnit) {
