@@ -260,6 +260,15 @@ public class TileMap {
 		}
 	}
 
+	private void updateOrientation(Unit curUnit, int xCoord, int prevX) {
+		// Orientation of unit changes depending on x coordinate difference
+		if(xCoord - prevX > 0) {
+			curUnit.setOrientation('r');
+		} else if(xCoord - prevX < 0) {
+			curUnit.setOrientation('l');
+		}
+	}
+	
 	public void updateSelectedTile(int xCoord, int yCoord) {
 		// only toggle if selected coordinates are different from previous
 		selectedTile.setX(xCoord);
@@ -328,7 +337,7 @@ public class TileMap {
 						unitMap.remove(c);
 					}
 					
-					atkSynch(c.getX(), c.getY(), attacked.getHp());
+					atkSynch(prevX, prevY, c.getX(), c.getY(), attacked.getHp());
 					
 					attacking.setAtkCount(0);
 					attacking.setMvCount(0);
@@ -341,13 +350,17 @@ public class TileMap {
 		}
 	}
 	
-	public void atkSynch(int atkedX, int atkedY, int newHP) {
-		AR.sendAtkRes(atkedX, atkedY, newHP);
+	public void atkSynch(int atkingX, int atkingY, int atkedX, int atkedY, int newHP) {
+		AR.sendAtkRes(atkingX, atkingY, atkedX, atkedY, newHP);
 	}
 	
-	public void updateUnit(int atkedX, int atkedY, int newHP) {
+	public void updateUnit(int atkingX, int atkingY, int atkedX, int atkedY, int newHP) {
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
+		Coordinate atkingC = new Coordinate(atkingX, atkingY);
+		Unit atking = unitMap.get(atkingC);
+		
+		updateOrientation(atking, atkedX, atkingX);
 		if(newHP <= 0) {
 			if(atked.getTeam() == RED_TEAM)
 				--numRed;
@@ -468,15 +481,6 @@ public class TileMap {
 	public boolean getGameOver()
 	{
 		return gameOver;
-	}
-	
-	private void updateOrientation(Unit curUnit, int xCoord, int prevX) {
-		// Orientation of unit changes depending on x coordinate difference
-		if(xCoord - prevX > 0) {
-			curUnit.setOrientation('r');
-		} else if(xCoord - prevX < 0) {
-			curUnit.setOrientation('l');
-		}
 	}
 
 }

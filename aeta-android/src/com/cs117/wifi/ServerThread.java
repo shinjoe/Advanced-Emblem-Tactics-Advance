@@ -95,7 +95,8 @@ public class ServerThread extends Thread {
 							curGame.tilemap.updateUnit(fromClient.getInt("newX"), fromClient.getInt("newY"),
 													   fromClient.getInt("prevX"), fromClient.getInt("prevY"));
 						else if (type == 1)
-							curGame.tilemap.updateUnit(fromClient.getInt("atkedX"), fromClient.getInt("atkedY"),
+							curGame.tilemap.updateUnit(fromClient.getInt("atkingX"), fromClient.getInt("atkingY"),
+													   fromClient.getInt("atkedX"), fromClient.getInt("atkedY"),
 													   fromClient.getInt("newHP"));
 						else {
 							curGame.curTurn = fromClient.getInt("turn");

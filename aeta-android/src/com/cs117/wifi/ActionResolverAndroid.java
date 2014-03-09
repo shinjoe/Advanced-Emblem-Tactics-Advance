@@ -68,7 +68,7 @@ public class ActionResolverAndroid implements ActionResolver {
 		mActivity.createClientThread(coords.toString());
 	}
 
-	public void sendAtkRes(int atkedX, int atkedY, int newHP)
+	public void sendAtkRes(int atkingX, int atkingY, int atkedX, int atkedY, int newHP)
 	{
 		JSONObject atkRes = new JSONObject();
 		try 
@@ -77,6 +77,8 @@ public class ActionResolverAndroid implements ActionResolver {
 			atkRes.put("atkedX", atkedX);
 			atkRes.put("atkedY", atkedY);
 			atkRes.put("newHP",  newHP);
+			atkRes.put("atkingX", atkingX);
+			atkRes.put("atkingY", atkingY);
 		}
 		catch(JSONException e)
 		{
