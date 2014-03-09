@@ -56,8 +56,11 @@ public class TileMap {
     private Texture red_tank_left;
     private Texture blue_mech_left;
     private Texture red_mech_left;
-    private Texture victory;
-    private Texture defeat;
+    
+    private Texture victoryB;
+    private Texture victoryR;
+    private Texture defeatB;
+    private Texture defeatR;
     
     private ActionResolver AR;
     	
@@ -100,8 +103,10 @@ public class TileMap {
 		red_inf_left = new Texture(Gdx.files.internal("gfx/red_inf_left.png"));
 		red_tank_left = new Texture(Gdx.files.internal("gfx/red_tank_left.png"));
 		red_mech_left = new Texture(Gdx.files.internal("gfx/red_mech_left.png"));
-		victory = new Texture(Gdx.files.internal("gfx/victory.png"));
-		defeat = new Texture(Gdx.files.internal("gfx/lose.png"));
+		victoryB = new Texture(Gdx.files.internal("data/victory_blue.png"));
+		victoryR = new Texture(Gdx.files.internal("data/victory_red.png"));
+		defeatB = new Texture(Gdx.files.internal("data/defeat_blue.png"));
+		defeatR = new Texture(Gdx.files.internal("data/defeat_red.png"));
 		
 		selectedTile = new Coordinate(-1, -1);
 		
@@ -196,19 +201,21 @@ public class TileMap {
 	}
 	
 	public void drawVictory(int x, int y, int pid, float xoff, float yoff) {
-		float xPos = x/3 + xoff;
-		float yPos = y/3 + yoff;
 		if(numRed == 0) {
-			if(pid == 1)
-				spriteBatch.draw(victory, xPos, yPos);
+			if(pid == BLUE_TEAM)
+				spriteBatch.draw(victoryB, (x/2 - victoryB.getWidth()/2 + xoff), 
+								 y/2 - victoryB.getHeight()/2 + yoff);
 			else
-				spriteBatch.draw(defeat, xPos, yPos);
+				spriteBatch.draw(defeatR, (x/2 - defeatR.getWidth()/2 + xoff), 
+						 		 y/2 - defeatR.getHeight()/2 + yoff);
 		}
 		else if(numBlue == 0) {
-			if(pid == 1)
-				spriteBatch.draw(defeat, xPos, yPos);
+			if(pid == RED_TEAM)
+				spriteBatch.draw(victoryR, (x/2 - victoryR.getWidth()/2 + xoff), 
+						 		 y/2 - victoryR.getHeight()/2 + yoff);
 			else
-				spriteBatch.draw(victory, xPos, yPos);
+				spriteBatch.draw(defeatB, (x/2 - defeatB.getWidth()/2 + xoff), 
+						 		 y/2 - defeatB.getHeight()/2 + yoff);
 		}
 	}
 	
