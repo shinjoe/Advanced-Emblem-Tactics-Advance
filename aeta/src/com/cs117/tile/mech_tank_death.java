@@ -24,15 +24,10 @@ public class mech_tank_death implements ApplicationListener{
 	
 	@Override
 	public void create(){
-<<<<<<< HEAD
 		expSheet = new Texture(Gdx.files.internal("gfx/mech_tank_death_explosion.png"));	
 		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth()/FRAME_COLS,expSheet.getHeight()/FRAME_ROWS);
 		expFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-=======
-		expSheet = new Texture(Gdx.files.internal("gfx/mech_tank_death_explosion.png"));
-		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth()/FRAME_COLS,expSheet.getHeight()/FRAME_ROWS);
-		expFrames = new TextureRegion[FRAME_COLS*FRAME_ROWS];
->>>>>>> dccae98c6c503624919bdc9ff8b132383c6271fb
+
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
 		     for (int j = 0; j < FRAME_COLS; j++) {
