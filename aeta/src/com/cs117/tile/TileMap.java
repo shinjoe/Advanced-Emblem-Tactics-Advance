@@ -50,6 +50,12 @@ public class TileMap {
     private Texture red_tank_right;
     private Texture blue_mech_right;
     private Texture red_mech_right;
+    private Texture blue_inf_left;
+    private Texture blue_tank_left;
+    private Texture red_inf_left;
+    private Texture red_tank_left;
+    private Texture blue_mech_left;
+    private Texture red_mech_left;
     private Texture victory;
     private Texture defeat;
     
@@ -88,6 +94,12 @@ public class TileMap {
 		red_inf_right = new Texture(Gdx.files.internal("gfx/red_inf_right.png"));
 		red_tank_right = new Texture(Gdx.files.internal("gfx/red_tank_right.png"));
 		red_mech_right = new Texture(Gdx.files.internal("gfx/red_mech_right.png"));
+		blue_inf_left = new Texture(Gdx.files.internal("gfx/blue_inf_left.png"));
+		blue_tank_left = new Texture(Gdx.files.internal("gfx/blue_tank_left.png"));
+		blue_mech_left = new Texture(Gdx.files.internal("gfx/blue_mech_left.png"));
+		red_inf_left = new Texture(Gdx.files.internal("gfx/red_inf_left.png"));
+		red_tank_left = new Texture(Gdx.files.internal("gfx/red_tank_left.png"));
+		red_mech_left = new Texture(Gdx.files.internal("gfx/red_mech_left.png"));
 		victory = new Texture(Gdx.files.internal("gfx/victory.png"));
 		defeat = new Texture(Gdx.files.internal("gfx/lose.png"));
 		
@@ -191,23 +203,44 @@ public class TileMap {
 	}
 	
 	private Texture resolveTexture(Unit curUnit) {
-		if (curUnit.getName().equals("INF")) {
-			if (curUnit.getTeam() == RED_TEAM)
-				return red_inf_right;
-			else
-				return blue_inf_right;
-		} else if (curUnit.getName().equals("TANK")) {
-			if (curUnit.getTeam() == RED_TEAM)
-				return red_tank_right;
-			else 
-				return blue_tank_right;
-		} else if (curUnit.getName().equals("MECH")){
-			if(curUnit.getTeam() == RED_TEAM)
-				return red_mech_right;
-			else
-				return blue_mech_right;
+		if(curUnit.getOrientation() == 'r') {
+			if (curUnit.getName().equals("INF")) {
+				if (curUnit.getTeam() == RED_TEAM)
+					return red_inf_right;
+				else
+					return blue_inf_right;
+			} else if (curUnit.getName().equals("TANK")) {
+				if (curUnit.getTeam() == RED_TEAM)
+					return red_tank_right;
+				else 
+					return blue_tank_right;
+			} else if (curUnit.getName().equals("MECH")){
+				if(curUnit.getTeam() == RED_TEAM)
+					return red_mech_right;
+				else
+					return blue_mech_right;
+			}
+			else return null;
 		}
-		else return null;
+		else {
+			if (curUnit.getName().equals("INF")) {
+				if (curUnit.getTeam() == RED_TEAM)
+					return red_inf_left;
+				else
+					return blue_inf_left;
+			} else if (curUnit.getName().equals("TANK")) {
+				if (curUnit.getTeam() == RED_TEAM)
+					return red_tank_left;
+				else 
+					return blue_tank_left;
+			} else if (curUnit.getName().equals("MECH")){
+				if(curUnit.getTeam() == RED_TEAM)
+					return red_mech_left;
+				else
+					return blue_mech_left;
+			}
+			else return null;
+		}
 	}
 
 	public void updateSelectedTile(int xCoord, int yCoord) {
@@ -264,6 +297,7 @@ public class TileMap {
 					if(attacking.getTeam() == attacked.getTeam())
 						break;
 					
+					updateOrientation(attacking, xCoord, prevX);
 					attacked.getAttacked(attacking);
 					if(attacked.getHp() <= 0) {
 						if(attacked.getTeam() == RED_TEAM)
@@ -380,6 +414,7 @@ public class TileMap {
 	public void updateUnit(int xCoord, int yCoord, int prevX, int prevY) {
 		Coordinate prevCoord = new Coordinate(prevX, prevY);
 		Unit curUnit = unitMap.get(prevCoord);
+		updateOrientation(curUnit, xCoord, prevX);
 		unitMap.remove(prevCoord);
 		unitMap.put(new Coordinate(xCoord, yCoord), curUnit);
 	}
@@ -404,7 +439,14 @@ public class TileMap {
 	{
 		return gameOver;
 	}
-
 	
+	private void updateOrientation(Unit curUnit, int xCoord, int prevX) {
+		// Orientation of unit changes depending on x coordinate difference
+		if(xCoord - prevX > 0) {
+			curUnit.setOrientation('r');
+		} else if(xCoord - prevX < 0) {
+			curUnit.setOrientation('l');
+		}
+	}
 
 }

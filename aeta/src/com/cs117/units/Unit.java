@@ -7,6 +7,7 @@ public abstract class Unit {
 	protected int atkRange;
 	protected int moveRange;
 	protected int maxHP;
+	protected char orientation;
 	
 	// 0 -> red; 1 -> blue
 	protected int team;
@@ -15,6 +16,13 @@ public abstract class Unit {
 	public Unit(int hp, int team) {
 		this.hp = hp;
 		this.team = team;
+		this.orientation = 'r';
+	}
+	
+	public Unit(int hp, int team, char orientation) {
+		this.hp = hp;
+		this.team = team;
+		this.orientation = orientation;
 	}
 	
 	public int getTeam() {
@@ -51,6 +59,14 @@ public abstract class Unit {
 	
 	public void setHp(int hp) {
 		this.hp = hp;
+	}
+	
+	public char getOrientation() {
+		return orientation;
+	}
+	
+	public void setOrientation(char orientation) {
+		this.orientation = orientation;
 	}
 	
 	public String toString() {
