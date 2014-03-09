@@ -32,7 +32,6 @@ public class TileMap {
 	private int[][] terrain = null;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
-	private SpriteBatch spriteBatch2;
 	
 	private Coordinate selectedTile;
 	private ConcurrentHashMap<Coordinate, Unit> unitMap;
@@ -50,17 +49,10 @@ public class TileMap {
     private Texture blue_tank_right;
     private Texture red_inf_right;
     private Texture red_tank_right;
-   // private Texture blue_mech_right;
-    //private Texture red_mech_right;
     private Texture red_mech_right;
     private Texture red_mech_left;
-    private Texture red_mech_front;
-    private Texture red_mech_back;
     private Texture blue_mech_right;
     private Texture blue_mech_left;
-    private Texture blue_mech_front;
-    private Texture blue_mech_back;
-    
     
     private ActionResolver AR;
 	
@@ -110,12 +102,8 @@ public class TileMap {
 		//red_mech_right = new Texture(Gdx.files.internal("gfx/red_mech_right.png"));
 		red_mech_right = new Texture(Gdx.files.internal("gfx/eliteRight2.png"));
 		red_mech_left = new Texture(Gdx.files.internal("gfx/eliteLeft2.png"));
-		red_mech_front = new Texture(Gdx.files.internal("gfx/eliteFront2.png"));
-		red_mech_back = new Texture(Gdx.files.internal("gfx/eliteBack2.png"));
 		blue_mech_right = new Texture(Gdx.files.internal("gfx/eliteRight.png"));
 		blue_mech_left = new Texture(Gdx.files.internal("gfx/eliteLeft.png"));
-		blue_mech_front = new Texture(Gdx.files.internal("gfx/eliteFront.png"));
-		blue_mech_back = new Texture(Gdx.files.internal("gfx/eliteBack.png"));
 
 		tankDeathTexture1 = new Texture(Gdx.files.internal("gfx/tankdeath1.png"));
 		tankDeathTexture2 = new Texture(Gdx.files.internal("gfx/tankdeath2.png"));
