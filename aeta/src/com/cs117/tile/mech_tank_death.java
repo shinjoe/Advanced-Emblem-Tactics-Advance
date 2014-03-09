@@ -24,9 +24,9 @@ public class mech_tank_death implements ApplicationListener{
 	
 	@Override
 	public void create(){
-		expSheet = new Texture(Gdx.files.internal("gfx/mech_tank_death_explosion.png"));
-		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth(),expSheet.getHeight());
-		expFrames = new TextureRegion[FRAME_COLS*FRAME_ROWS];
+		expSheet = new Texture(Gdx.files.internal("gfx/mech_tank_death_explosion.png"));	
+		TextureRegion[][] tmp = TextureRegion.split(expSheet,expSheet.getWidth()/FRAME_COLS,expSheet.getHeight()/FRAME_ROWS);
+		expFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 		int index = 0;
 		for (int i = 0; i < FRAME_ROWS; i++) {
 		     for (int j = 0; j < FRAME_COLS; j++) {
@@ -36,13 +36,10 @@ public class mech_tank_death implements ApplicationListener{
 		mech_tank_death_anime = new Animation(0.15f,expFrames);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
-	
-		
-		
 	}
 	
 	public void renderAt(int X,int Y){
-		 Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);                        // #14
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);                        // #14
 	        stateTime += Gdx.graphics.getDeltaTime();           // #15
 	        currentFrame = mech_tank_death_anime.getKeyFrame(stateTime, true);  // #16
 	        spriteBatch.begin();
@@ -50,8 +47,6 @@ public class mech_tank_death implements ApplicationListener{
 	        							   Y*Game.BLOCK_HEIGHT+Game.TILE_OFFSET, 
 	        							   Game.BLOCK_WIDTH - Game.TILE_OFFSET,Game.BLOCK_HEIGHT - Game.TILE_OFFSET);             // #17
 	        spriteBatch.end();	
-		
-			
 	}
 
 

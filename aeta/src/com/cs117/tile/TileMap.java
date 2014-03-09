@@ -3,11 +3,14 @@ package com.cs117.tile;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.cs117.aeta.Game;
 import com.cs117.connection.ActionResolver;
@@ -59,6 +62,17 @@ public class TileMap {
     
     
     private ActionResolver AR;
+	
+    // Animation variables
+	public static long timer;
+	public static boolean timerOn;
+	private Coordinate currAtkCoord;
+	private Texture tankDeathTexture1;
+	private Texture tankDeathTexture2;
+	private Texture tankDeathTexture3;
+	private Texture tankDeathTexture4;
+	private Texture tankDeathTexture5;
+	private Texture tankDeathTexture6;
     	
 
 	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
@@ -100,8 +114,12 @@ public class TileMap {
 		blue_mech_front = new Texture(Gdx.files.internal("gfx/eliteFront.png"));
 		blue_mech_back = new Texture(Gdx.files.internal("gfx/eliteBack.png"));
 		
-		
-		
+		tankDeathTexture1 = new Texture(Gdx.files.internal("gfx/tankdeath1.png"));
+		tankDeathTexture2 = new Texture(Gdx.files.internal("gfx/tankdeath2.png"));
+		tankDeathTexture3 = new Texture(Gdx.files.internal("gfx/tankdeath3.png"));
+		tankDeathTexture4 = new Texture(Gdx.files.internal("gfx/tankdeath4.png"));
+		tankDeathTexture5 = new Texture(Gdx.files.internal("gfx/tankdeath5.png"));
+		tankDeathTexture6 = new Texture(Gdx.files.internal("gfx/tankdeath6.png"));
 		
 		selectedTile = new Coordinate(-1, -1);
 		
@@ -115,10 +133,13 @@ public class TileMap {
 		unitMap.put(new Coordinate(6, 2), new Mech(RED_TEAM));
 		unitMap.put(new Coordinate(2, 6), new Mech(BLUE_TEAM));
 		
+		mechDeath = new mech_tank_death();
+		System.currentTimeMillis();
 		walkable = null;
 		attackable = null;
 		this.font = font;
 		this.hpFont = hpFont;
+		TileMap.timerOn = false;
 	}
 	
 	/** === DRAW FUNCTIONS === **/
@@ -174,7 +195,6 @@ public class TileMap {
 			hpFont.draw(spriteBatch, hpString, 
 						(c.getX()+1) * Game.BLOCK_WIDTH - hpFont.getSpaceWidth()*3,
 						c.getY() * Game.BLOCK_HEIGHT + hpFont.getLineHeight());
-			
 		}
 	}
 	
@@ -250,11 +270,28 @@ public class TileMap {
 					Unit attacking = unitMap.get(currUnit);
 					
 					attacked.getAttacked(attacking);
-					if(attacked.getHp() <= 0)
+					if(attacked.getHp() <= 0) {
+						if (attacked.getName() == "MECH" || attacked.getName() == "TANK")
+						{  
+							System.out.println("Loading mech/tank attack animation");
+							mechDeath.create(); 
+							mechDeath.renderAt(xCoord,yCoord);
+						}
+						
+						else if (attacked.getName() == "INF")
+						{
+							System.out.println("Loading infantry attack animation");
+							infDeath.create();
+							infDeath.renderAt(xCoord,yCoord);
+						}
 						unitMap.remove(c);
+					}
 					
 					atkSynch(c.getX(), c.getY(), attacked.getHp());
 					
+					currAtkCoord = new Coordinate(xCoord, yCoord);
+					TileMap.timer = System.currentTimeMillis();
+					TileMap.timerOn = true;
 					attackable = null;
 					break;
 				}
@@ -268,25 +305,14 @@ public class TileMap {
 		AR.sendAtkRes(atkedX, atkedY, newHP);
 	}
 	
+	// Deprecated Function
 	public void updateUnit(int atkedX, int atkedY, int newHP)
 	{
+		System.out.printf("Updating units at %d %d\n", atkedX, atkedY);
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
 		if(newHP <= 0)
-		{
-			if (atked.getName() == "MECH" || atked.getName() == "TANK")
-			{  
-				mechDeath.create(); 
-				mechDeath.renderAt(atkedX,atkedY);
-			}
-			
-			else if (atked.getName() == "INF")
-			{
-				infDeath.create();
-				infDeath.renderAt(atkedX,atkedY);
-			}
-			unitMap.remove(atkedC);
-		}
+		{}
 		else
 			atked.setHp(newHP);
 	}
@@ -380,6 +406,33 @@ public class TileMap {
 		return selectedTile;
 	}
 	
+	public void drawExplosionTexture(long curTimeDelta) {
+		System.out.println("Current Delta: " + curTimeDelta);
+		Texture explosionTexture = null;
+		if(curTimeDelta >= 0)
+			explosionTexture = tankDeathTexture1;
+		// NOTE: This part isn't working currently
+		/*
+		else if(curTimeDelta >= 200)
+			explosionTexture = tankDeathTexture1;
+		else if(curTimeDelta >= 400)
+			explosionTexture = tankDeathTexture1;
+		else if(curTimeDelta >= 600)
+			explosionTexture = tankDeathTexture3;
+		else if(curTimeDelta >= 800)
+			explosionTexture = tankDeathTexture2;
+		else if(curTimeDelta >= 1000)
+			explosionTexture = tankDeathTexture1;
+		*/
+		else
+			TileMap.timerOn = false;
+		if(explosionTexture != null) {
+			spriteBatch.draw(explosionTexture, currAtkCoord.getX() * Game.BLOCK_WIDTH + Game.TILE_OFFSET, 
+			 currAtkCoord.getY() * Game.BLOCK_HEIGHT + Game.TILE_OFFSET, 
+			 Game.BLOCK_WIDTH - Game.TILE_OFFSET, 
+			 Game.BLOCK_HEIGHT - Game.TILE_OFFSET);
+		}
+	}
 
 	
 	

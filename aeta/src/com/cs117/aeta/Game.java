@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.cs117.tile.TileMap;
+import com.cs117.tile.mech_tank_death;
 import com.cs117.connection.ActionResolver;
 import com.cs117.interaction.UI;
 
@@ -97,6 +99,13 @@ public class Game implements ApplicationListener {
 		tilemap.drawAttackable();
 		//tilemap.__DEBUG_drawUnitString();
 		tilemap.drawUnits();
+		if(TileMap.timerOn) {
+			long curTimeDelta = System.currentTimeMillis() - TileMap.timer;
+			if(curTimeDelta >= 300)
+				TileMap.timerOn = false;
+			else
+				tilemap.drawExplosionTexture(curTimeDelta);
+		}
 		spriteBatch.end();
 		
 		ui.draw();
