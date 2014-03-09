@@ -415,21 +415,23 @@ public class TileMap {
 	public void drawExplosionTexture(long curTimeDelta) {
 		System.out.println("Current Delta: " + curTimeDelta);
 		Texture explosionTexture = null;
-		if(curTimeDelta >= 0)
+		if(curTimeDelta >= 0 && curTimeDelta <= 31)
 			explosionTexture = tankDeathTexture1;
 		// NOTE: This part isn't working currently
-		/*
-		else if(curTimeDelta >= 200)
-			explosionTexture = tankDeathTexture1;
-		else if(curTimeDelta >= 400)
-			explosionTexture = tankDeathTexture1;
-		else if(curTimeDelta >= 600)
-			explosionTexture = tankDeathTexture3;
-		else if(curTimeDelta >= 800)
+		
+		else if(curTimeDelta >= 31 && curTimeDelta <= 65)
+		{
 			explosionTexture = tankDeathTexture2;
-		else if(curTimeDelta >= 1000)
-			explosionTexture = tankDeathTexture1;
-		*/
+		}
+		else if(curTimeDelta >= 65 && curTimeDelta <= 97)
+		{	explosionTexture = tankDeathTexture3;}
+		else if(curTimeDelta >= 97 && curTimeDelta <= 115)
+		{	explosionTexture = tankDeathTexture4;}
+		else if(curTimeDelta >= 115 && curTimeDelta <= 132)
+		{	explosionTexture = tankDeathTexture5;}
+		else if(curTimeDelta >= 132)
+		{	explosionTexture = tankDeathTexture6;}
+		
 		else
 			TileMap.timerOn = false;
 		if(explosionTexture != null) {
