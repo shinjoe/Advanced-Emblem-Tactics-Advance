@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.cs117.aeta.Game;
+import com.cs117.animation.ExplosionAnimation;
 import com.cs117.connection.ActionResolver;
 import com.cs117.units.Infantry;
 import com.cs117.units.Mech;
@@ -65,9 +67,15 @@ public class TileMap {
     private ActionResolver AR;
     	
     private boolean gameOver;
+    
+    private boolean attackOccurred;
+    private int explX;
+    private int explY;
+    private ExplosionAnimation explosionAnim;
+    public static boolean animOver = false;
 
 	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
-					ActionResolver ar) {
+					ActionResolver ar, ExplosionAnimation explosionAnim) {
 		
 		AR = ar;
 		
@@ -127,6 +135,8 @@ public class TileMap {
 		this.hpFont = hpFont;
 		
 		this.gameOver = false;
+		this.attackOccurred = false;
+		this.explosionAnim = explosionAnim;
 	}
 	
 	/** === DRAW FUNCTIONS === **/
@@ -313,6 +323,7 @@ public class TileMap {
 	
 	
 	public void attackWithSelectedUnit(int xCoord, int yCoord, int prevX, int prevY) {
+		attackOccurred = false;
 		if (attackable != null) {
 			for (Coordinate c : attackable) {
 				if (c.equals(selectedTile) && unitMap.containsKey(c)) {	
@@ -324,10 +335,15 @@ public class TileMap {
 						break;
 					if(attacking.getAtkCount() == 0)
 						break;
-					
+				
 					updateOrientation(attacking, xCoord, prevX);
 					attacked.getAttacked(attacking);
+					attackOccurred = true;
+					animOver = false;
+					explX = c.getX();
+					explY = c.getY();
 					if(attacked.getHp() <= 0) {
+						
 						if(attacked.getTeam() == RED_TEAM)
 							--numRed;
 						else
@@ -354,14 +370,24 @@ public class TileMap {
 		AR.sendAtkRes(atkingX, atkingY, atkedX, atkedY, newHP);
 	}
 	
+	public void drawExplosion() {
+		if (attackOccurred && !animOver) {
+			explosionAnim.draw(spriteBatch, explX, explY);
+		}
+	}
+	
 	public void updateUnit(int atkingX, int atkingY, int atkedX, int atkedY, int newHP) {
 		Coordinate atkedC = new Coordinate(atkedX, atkedY);
 		Unit atked = unitMap.get(atkedC);
 		Coordinate atkingC = new Coordinate(atkingX, atkingY);
 		Unit atking = unitMap.get(atkingC);
-		
+		attackOccurred = true;
+		animOver = false;
+		explX = atkedX;
+		explY = atkedY;
 		updateOrientation(atking, atkedX, atkingX);
 		if(newHP <= 0) {
+			
 			if(atked.getTeam() == RED_TEAM)
 				--numRed;
 			else

@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.cs117.tile.TileMap;
 import com.cs117.connection.ActionResolver;
 import com.cs117.interaction.UI;
-
+import com.cs117.animation.ExplosionAnimation;
 
 public class Game implements ApplicationListener {
 	public static int BLOCK_WIDTH;
@@ -34,7 +34,7 @@ public class Game implements ApplicationListener {
 	
 	public static TileMap tilemap;
 	public static UI ui;
-	
+		
 	public static int pid = 0;
 	public static int curTurn = 0;
 	private ShapeRenderer shapeRenderer;
@@ -46,6 +46,8 @@ public class Game implements ApplicationListener {
 	private BitmapFont font;
 	private BitmapFont hpFont;
 	private ActionResolver mActionResolver;
+	
+	ExplosionAnimation explosionAnim;
 	
 	public Game(ActionResolver actionResolver) {
 		this.mActionResolver = actionResolver;
@@ -75,10 +77,12 @@ public class Game implements ApplicationListener {
 		cam.update();		
 		//glViewport = new Rectangle(0, 0, WIDTH, HEIGHT);
 		
-		tilemap = new TileMap(shapeRenderer, spriteBatch, font, hpFont, mActionResolver);
+		explosionAnim = new ExplosionAnimation();
+		tilemap = new TileMap(shapeRenderer, spriteBatch, font, hpFont, mActionResolver, explosionAnim);
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
 		REAL_ROWS = tilemap.getNumTilemapRows();
 		REAL_COLS = tilemap.getNumTilemapCols();
+		
 	}
 	
 	
@@ -102,9 +106,11 @@ public class Game implements ApplicationListener {
 		tilemap.drawAttackable();
 		//tilemap.__DEBUG_drawUnitString();
 		tilemap.drawUnits();
+		tilemap.drawExplosion();
 		if(tilemap.getGameOver())
 			tilemap.drawVictory(WIDTH, HEIGHT, pid,
 								CAM_X_OFFSET*BLOCK_WIDTH, CAM_Y_OFFSET*BLOCK_HEIGHT);
+		
 		spriteBatch.end();
 		
 		ui.draw();
