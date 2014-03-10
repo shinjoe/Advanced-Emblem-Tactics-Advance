@@ -31,6 +31,7 @@ public class Game implements ApplicationListener {
 	public static boolean mechDeath = false;
 	public static boolean infDeath = false;
 	public static boolean mechAttack = false;
+	public static boolean tankAttack = false;
 	public static boolean infAttack = false;
 	
 	public static int WIDTH;
@@ -112,6 +113,9 @@ public class Game implements ApplicationListener {
 				TileMap.timerOn = false;
 				mechDeath= false;
 				infDeath = false;
+				infAttack = false;
+				mechAttack = false;
+				tankAttack = false;
 			}
 			else
 				tilemap.drawExplosionTexture(curTimeDelta);

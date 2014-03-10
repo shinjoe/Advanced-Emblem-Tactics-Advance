@@ -62,12 +62,15 @@ public class TileMap {
 	public static long timer;
 	public static boolean timerOn;
 	private Coordinate currAtkCoord;
+	
+	//death animation frame; tank and mechanic units have the same death animation
 	private Texture tankDeathTexture1;
 	private Texture tankDeathTexture2;
 	private Texture tankDeathTexture3;
 	private Texture tankDeathTexture4;
 	private Texture tankDeathTexture5;
 	private Texture tankDeathTexture6;
+	
 	private Texture infDeathTexture1;
 	private Texture infDeathTexture2;
 	private Texture infDeathTexture3;
@@ -76,6 +79,31 @@ public class TileMap {
 	private Texture infDeathTexture6;
     	
 
+	//attack animation frame for infantry/mech/tank
+	private Texture infAttackTexture1;
+	private Texture infAttackTexture2;
+	private Texture infAttackTexture3;
+	private Texture infAttackTexture4;
+	private Texture infAttackTexture5;
+	private Texture infAttackTexture6;
+	
+	private Texture tankAttackTexture1;
+	private Texture tankAttackTexture2;
+	private Texture tankAttackTexture3;
+	private Texture tankAttackTexture4;
+	private Texture tankAttackTexture5;
+	private Texture tankAttackTexture6;
+	
+	private Texture mechAttackTexture1;
+	private Texture mechAttackTexture2;
+	private Texture mechAttackTexture3;
+	private Texture mechAttackTexture4;
+	private Texture mechAttackTexture5;
+	private Texture mechAttackTexture6;
+	
+	
+	
+	
 	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
 					ActionResolver ar) {
 		
@@ -124,7 +152,29 @@ public class TileMap {
 		infDeathTexture4 = new Texture(Gdx.files.internal("gfx/infdeath4.png"));
 		infDeathTexture5 = new Texture(Gdx.files.internal("gfx/infdeath5.png"));
 		infDeathTexture6 = new Texture(Gdx.files.internal("gfx/infdeath6.png"));
-
+		
+		infAttackTexture1 = new Texture(Gdx.files.internal("gfx/infAttack1.png"));
+		infAttackTexture2 = new Texture(Gdx.files.internal("gfx/infAttack2.png"));
+		infAttackTexture3 = new Texture(Gdx.files.internal("gfx/infAttack3.png"));
+		infAttackTexture4 = new Texture(Gdx.files.internal("gfx/infAttack4.png"));
+		infAttackTexture5 = new Texture(Gdx.files.internal("gfx/infAttack5.png"));
+		infAttackTexture6 = new Texture(Gdx.files.internal("gfx/infAttack6.png"));
+		
+		tankAttackTexture1 = new Texture(Gdx.files.internal("gfx/tankAttack1.png"));
+		tankAttackTexture2 = new Texture(Gdx.files.internal("gfx/tankAttack2.png"));
+		tankAttackTexture3 = new Texture(Gdx.files.internal("gfx/tankAttack3.png"));
+		tankAttackTexture4 = new Texture(Gdx.files.internal("gfx/tankAttack4.png"));
+		tankAttackTexture5 = new Texture(Gdx.files.internal("gfx/tankAttack5.png"));
+		tankAttackTexture6 = new Texture(Gdx.files.internal("gfx/tankAttack6.png"));
+		
+		mechAttackTexture1 = new Texture(Gdx.files.internal("gfx/mechAttack1.png"));
+		mechAttackTexture2 = new Texture(Gdx.files.internal("gfx/mechAttack2.png"));
+		mechAttackTexture3 = new Texture(Gdx.files.internal("gfx/mechAttack3.png"));
+		mechAttackTexture4 = new Texture(Gdx.files.internal("gfx/mechAttack4.png"));
+		mechAttackTexture5 = new Texture(Gdx.files.internal("gfx/mechAttack5.png"));
+		mechAttackTexture6 = new Texture(Gdx.files.internal("gfx/mechAttack6.png"));
+				
+		
 		mechDeath = new mech_tank_death();
 		infDeath = new soldier_death();
 		
@@ -283,6 +333,9 @@ public class TileMap {
 							System.out.println("Loading mech/tank death animation");
 							Game.mechDeath = true;
 							Game.infDeath = false;
+							Game.infAttack = false;
+							Game.mechAttack = false;
+							Game.tankAttack = false;
 							//mechDeath.create(); 
 							//mechDeath.renderAt(xCoord,yCoord);
 						}
@@ -292,6 +345,9 @@ public class TileMap {
 							System.out.println("Loading infantry death animation");
 							Game.infDeath = true;
 							Game.mechDeath = false;
+							Game.infAttack = false;
+							Game.mechAttack = false;
+							Game.tankAttack = false;
 							//infDeath.create();
 							//infDeath.renderAt(xCoord,yCoord);
 						}
@@ -300,6 +356,46 @@ public class TileMap {
 						TileMap.timerOn = true;
 					}
 			
+					else
+					{
+						if (attacking.getName() == "MECH")
+						{
+							System.out.println("Loading mech attack animation");
+							Game.mechDeath = false;
+							Game.infDeath = false;
+							Game.infAttack = false;
+							Game.mechAttack = true;
+							Game.tankAttack = false;				
+							
+						}
+						
+						else if (attacking.getName() == "TANK")
+						{
+							System.out.println("Loading tank attack animation");
+							Game.mechDeath = false;
+							Game.infDeath = false;
+							Game.infAttack = false;
+							Game.mechAttack = false;
+							Game.tankAttack = true;					
+							
+						}
+						
+						else if (attacking.getName() == "INF")
+						{
+							System.out.println("Loading inf attack animation");
+							Game.mechDeath = false;
+							Game.infDeath = false;
+							Game.infAttack = true;
+							Game.mechAttack = false;
+							Game.tankAttack = false;					
+							
+						}
+						TileMap.timer = System.currentTimeMillis();
+						TileMap.timerOn = true;
+						
+						
+					}
+					
 					atkSynch(c.getX(), c.getY(), attacked.getHp());
 					
 					currAtkCoord = new Coordinate(xCoord, yCoord);
@@ -307,6 +403,7 @@ public class TileMap {
 					//TileMap.timerOn = true;
 					attackable = null;
 					break;
+					
 				}
 			}
 			attackable = null;
@@ -448,6 +545,24 @@ public class TileMap {
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture1;
 			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture1;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture1;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture1;
+			}
 		}
 		else if(curTimeDelta >= 31 && curTimeDelta <= 65)
 		{
@@ -461,6 +576,25 @@ public class TileMap {
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture2;
 			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture2;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture2;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture2;
+			}
+			
 		}
 		else if(curTimeDelta >= 65 && curTimeDelta <= 97)
 		{	
@@ -473,6 +607,24 @@ public class TileMap {
 			{
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture3;
+			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture3;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture3;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture3;
 			}
 		}
 		else if(curTimeDelta >= 97 && curTimeDelta <= 115)
@@ -487,6 +639,24 @@ public class TileMap {
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture4;
 			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture4;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture4;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture4;
+			}
 		}
 		else if(curTimeDelta >= 115 && curTimeDelta <= 132)
 		{	
@@ -500,6 +670,24 @@ public class TileMap {
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture5;
 			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture5;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture5;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture5;
+			}
 		}
 		else if(curTimeDelta >= 132 && curTimeDelta <= 200)
 		{	
@@ -512,6 +700,24 @@ public class TileMap {
 			{
 				System.out.println("infantry death animation deployed");
 				explosionTexture = infDeathTexture6;
+			}
+			
+			else if (Game.infAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = infAttackTexture6;
+			}
+			
+			else if (Game.mechAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = mechAttackTexture6;
+			}
+			
+			else if (Game.tankAttack == true)
+			{
+				System.out.println("infantry death animation deployed");
+				explosionTexture = tankAttackTexture6;
 			}
 			TileMap.timerOn = false;
 		}
