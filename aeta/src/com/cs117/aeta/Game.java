@@ -28,6 +28,11 @@ public class Game implements ApplicationListener {
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 10;
 	
+	public static boolean mechDeath = false;
+	public static boolean infDeath = false;
+	public static boolean mechAttack = false;
+	public static boolean infAttack = false;
+	
 	public static int WIDTH;
 	public static int HEIGHT;
 	
@@ -101,8 +106,13 @@ public class Game implements ApplicationListener {
 		tilemap.drawUnits();
 		if(TileMap.timerOn) {
 			long curTimeDelta = System.currentTimeMillis() - TileMap.timer;
-			if(curTimeDelta >= 300)
+			if(curTimeDelta >= 250)
+			{	
+				System.out.println("timer reset");
 				TileMap.timerOn = false;
+				mechDeath= false;
+				infDeath = false;
+			}
 			else
 				tilemap.drawExplosionTexture(curTimeDelta);
 		}
