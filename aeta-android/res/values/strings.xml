@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Advanced Emblem Tactics Advance</string>
+    <string name="app_name">AETA</string>
     <string name="discover_peers">Discover Peers</string>
     <string name="play">Play</string>
     <string name="create_group">Create Group</string>
