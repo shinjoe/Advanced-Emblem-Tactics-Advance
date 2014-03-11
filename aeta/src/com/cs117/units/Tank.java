@@ -7,8 +7,8 @@ public class Tank extends Unit {
 	private static final int TANK_ATK_RANGE = 2;
 	private static final int TANK_MOVE_RANGE = 2;
 	
-	public Tank(int team) {
-		super(TANK_DEFAULT_HP, team);
+	public Tank(int team, char orientation) {
+		super(TANK_DEFAULT_HP, team, orientation);
 		this.name = "TANK";
 		this.attackStr = TANK_ATK_STR;
 		this.atkRange = TANK_ATK_RANGE;

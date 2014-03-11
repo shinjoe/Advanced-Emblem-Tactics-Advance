@@ -43,9 +43,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             peers.addAll(peerList.getDeviceList());
             mActivity.getListAdapter().notifyDataSetChanged();
             
-            if (peers.size() == 0) {
-            	Toast.makeText(mActivity.getApplicationContext(), "No friends. :(", Toast.LENGTH_SHORT).show();
-            }
         }
     };
 
@@ -65,13 +62,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 			int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 			
 			if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-				Toast.makeText(context, "Wi-Fi Direct Enabled", Toast.LENGTH_SHORT).show();
 				mActivity.setIsWifiP2pEnabled(true);
 				mActivity.discoverPeers();
 				if (mManager != null)
 					mManager.requestPeers(mChannel, peerListListener);
 			} else {
-				Toast.makeText(context, "Wi-Fi Direct Disabled", Toast.LENGTH_SHORT).show();
 				mActivity.setIsWifiP2pEnabled(false);
 			}
 		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
@@ -97,11 +92,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 							
 							// Create server and client threads in MainActivity
 							if (info.groupFormed && info.isGroupOwner) {
-								Toast.makeText(context, "I AM GROUP OWNER!!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(context, "You are on Red Team", Toast.LENGTH_SHORT).show();
 								mActivity.setIsGroupOwner(true);
 								mActivity.createServerThread();
 							} else if (info.groupFormed) {
-								Toast.makeText(context, "...I'm not the group owner... *sniffle*", Toast.LENGTH_SHORT).show();
+								Toast.makeText(context, "You are on Blue Team", Toast.LENGTH_SHORT).show();
 								mActivity.setIsGroupOwner(false);
 								// Peer is group owner
 								MainActivity.mPeerAddress = ownerAddr;
@@ -113,7 +108,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 						}
 					});
 				} else {
-					Toast.makeText(context, "DC'd...", Toast.LENGTH_LONG).show();
 				}
 			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

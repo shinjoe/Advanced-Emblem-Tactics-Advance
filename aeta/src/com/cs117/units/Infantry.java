@@ -7,8 +7,8 @@ public class Infantry extends Unit {
 	private static final int INFANTRY_ATK_RANGE = 3;
 	private static final int INFANTRY_MOVE_RANGE = 3;
 	
-	public Infantry(int team) {
-		super(INFANTRY_DEFAULT_HP, team);
+	public Infantry(int team, char orientation) {
+		super(INFANTRY_DEFAULT_HP, team, orientation);
 		this.name = "INF";
 		this.attackStr = INFANTRY_ATK_STR;
 		this.atkRange = INFANTRY_ATK_RANGE;

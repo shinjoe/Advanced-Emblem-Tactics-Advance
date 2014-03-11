@@ -101,7 +101,6 @@ public class MainActivity extends AndroidApplication {
 					
 					@Override
 					public void onFailure(int reason) {
-						Toast.makeText(getApplicationContext(), "No group for you! You're probably already in one. " + reason, Toast.LENGTH_SHORT).show();
 						Log.d(TAG, "Create group failure. Reason: " + reason);
 					}
 				
@@ -130,12 +129,9 @@ public class MainActivity extends AndroidApplication {
 						mGame.pid = 0;
 					else
 						mGame.pid = 1;
-					Toast.makeText(getApplicationContext(), "my pid: " + mGame.pid, Toast.LENGTH_SHORT).show();
 					mInGame = true;
 					setContentView(mGameView);
 				}
-				else
-					Toast.makeText(getApplicationContext(), "Nope. Turn on Wifi Direct first. ^_^", Toast.LENGTH_SHORT).show();
 			}
 		});
         
@@ -246,7 +242,6 @@ public class MainActivity extends AndroidApplication {
 
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(getApplicationContext(), "Herp a derp, connection failed. " + reason, Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Connect failure. Reason: " + reason);
 			}
 			
@@ -292,7 +287,6 @@ public class MainActivity extends AndroidApplication {
 			mPeerAdapter.notifyDataSetChanged();
 		}
 		if (mServerThread != null) {
-			Toast.makeText(this, "Stopping server thread.", Toast.LENGTH_SHORT).show();
 			try {
 				// Since ServerSocket.accept() ignores interrupts, kill thread by closing socket
 				// and forcing it to throw an exception
@@ -305,7 +299,6 @@ public class MainActivity extends AndroidApplication {
 			mServerThread = null;
 		}
 		if (mClientThread != null) {
-			Toast.makeText(this, "Stopping client thread.", Toast.LENGTH_SHORT).show();
 			mClientThread.interrupt();
 			mClientThread = null;
 		}

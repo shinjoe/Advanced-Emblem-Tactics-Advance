@@ -50,7 +50,6 @@ public class ServerThread extends Thread {
 	
 						@Override
 						public void run() {
-							Toast.makeText(mActivity.getApplicationContext(), "Connected to peer w/ IP: " + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 						}
 						
 					});
@@ -110,11 +109,8 @@ public class ServerThread extends Thread {
 						Log.d(MainActivity.TAG, "Receive coord failure: " + e.toString());
 					}
 					
-					Toast.makeText(mActivity.getApplicationContext(), mFromClient, Toast.LENGTH_SHORT).show();
 				}
 				// For connection phase, can probably do without
-				else
-					Toast.makeText(mActivity.getApplicationContext(), mFromClient + " from " + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 			}
 			
 		});

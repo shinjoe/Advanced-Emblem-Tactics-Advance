@@ -28,7 +28,6 @@ public class ClientThread extends Thread {
 
 					@Override
 					public void run() {
-						Toast.makeText(mActivity.getApplicationContext(), "No peer IP address." + MainActivity.mPeerAddress, Toast.LENGTH_SHORT).show();
 					}
 					
 				});

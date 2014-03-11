@@ -14,7 +14,6 @@ public abstract class Unit {
 	// 0 -> red; 1 -> blue
 	protected int team;
 
-	
 	public Unit(int hp, int team) {
 		this.hp = hp;
 		this.team = team;

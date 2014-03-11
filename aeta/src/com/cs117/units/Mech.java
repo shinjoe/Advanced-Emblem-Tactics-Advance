@@ -7,8 +7,8 @@ public class Mech extends Unit{
 	private static final int MECH_ATK_RANGE = 2;
 	private static final int MECH_MOVE_RANGE = 2;
 	
-	public Mech(int team) {
-		super(MECH_DEFAULT_HP, team);
+	public Mech(int team, char orientation) {
+		super(MECH_DEFAULT_HP, team, orientation);
 		this.name = "MECH";
 		this.attackStr = MECH_ATK_STR;
 		this.atkRange = MECH_ATK_RANGE;

@@ -22,6 +22,8 @@ import com.cs117.units.Unit;
 public class TileMap {
 	private static final int IMMEDIATE_WALKABLE = 8;
 	private static final int IMMEDIATE_ATTACKABLE = 24;
+	private static final int NUM_RED = 6;
+	private static final int NUM_BLUE = 6;
 	
 	public static final int RED_TEAM  = 0;
 	public static final int BLUE_TEAM = 1; 
@@ -80,15 +82,17 @@ public class TileMap {
 		AR = ar;
 		
 		terrain = new int[][] { 
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0},
-				{0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0},
-				{0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0},
-				{1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
-				{1, 1, 1, 1, 2, 2, 1, 1, 0, 1, 0},
-				{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-				{0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+				{2, 1, 1, 1, 0, 1, 1, 1, 1, 1, 2},
+				{2, 1, 1, 1, 0, 1, 1, 1, 1, 1, 2},
+				{1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1},
+				{1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1},
+				{1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1},
+				{2, 1, 1, 1, 1, 1, 0, 1, 1, 1, 2},
+				{2, 1, 1, 1, 1, 1, 0, 1, 1, 1, 2}
+
+
 		};
 
 		this.shapeRenderer = shapeRenderer;
@@ -119,15 +123,22 @@ public class TileMap {
 		selectedTile = new Coordinate(-1, -1);
 		
 		unitMap = new ConcurrentHashMap<Coordinate, Unit>();
-		unitMap.put(new Coordinate(0, 0), new Infantry(RED_TEAM));
-		unitMap.put(new Coordinate(5, 1), new Tank(RED_TEAM));
-		unitMap.put(new Coordinate(1, 3), new Tank(BLUE_TEAM));
-		unitMap.put(new Coordinate(5, 5), new Infantry(BLUE_TEAM));
-		unitMap.put(new Coordinate(6, 2), new Mech(RED_TEAM));
-		unitMap.put(new Coordinate(2, 6), new Mech(BLUE_TEAM));
+		unitMap.put(new Coordinate(0,4), new Tank(BLUE_TEAM, 'r'));
+		unitMap.put(new Coordinate(1,0), new Infantry(BLUE_TEAM, 'r'));
+		unitMap.put(new Coordinate(1,2), new Mech(BLUE_TEAM, 'r'));
+		unitMap.put(new Coordinate(1,4), new Infantry(BLUE_TEAM, 'r'));
+		unitMap.put(new Coordinate(1,6), new Mech(BLUE_TEAM, 'r'));
+		unitMap.put(new Coordinate(1,8), new Infantry(BLUE_TEAM, 'r'));
 		
-		numRed = 3;
-		numBlue = 3;
+		unitMap.put(new Coordinate(10,4), new Tank(RED_TEAM,'l'));
+		unitMap.put(new Coordinate(9,0), new Infantry(RED_TEAM,'l'));
+		unitMap.put(new Coordinate(9,2), new Mech(RED_TEAM,'l'));
+		unitMap.put(new Coordinate(9,4), new Infantry(RED_TEAM,'l'));
+		unitMap.put(new Coordinate(9,6), new Mech(RED_TEAM,'l'));
+		unitMap.put(new Coordinate(9,8), new Infantry(RED_TEAM,'l'));
+		
+		numRed = NUM_RED;
+		numBlue = NUM_BLUE;
 		
 		walkable = null;
 		attackable = null;
