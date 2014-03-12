@@ -13,6 +13,7 @@ import com.cs117.aeta.Game;
 import com.cs117.tile.Coordinate;
 import com.cs117.tile.TileMap;
 import com.cs117.units.Unit;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
 
 public class UI {
 	
@@ -26,16 +27,20 @@ public class UI {
 	private static int UP_HEIGHT = Game.BLOCK_HEIGHT;
 	private static float UP_X = END_TURN_X + Game.BLOCK_WIDTH;
 	private static float UP_Y = END_TURN_Y + 2 * Game.BLOCK_HEIGHT;
-	private static int RIGHT_WIDTH = UP_HEIGHT;
-	private static int RIGHT_HEIGHT = UP_WIDTH;
-	private static float RIGHT_X = 9 * Game.BLOCK_WIDTH;
-	private static float RIGHT_Y = 2 * Game.BLOCK_HEIGHT;
+	private static int RIGHT_WIDTH = UP_WIDTH;
+	private static int RIGHT_HEIGHT = UP_HEIGHT;
+	private static float RIGHT_X = 7 * Game.BLOCK_WIDTH;
+	private static float RIGHT_Y = 3 * Game.BLOCK_HEIGHT;
 	
 	
 	private Stage stage;
 	
-	private TextureAtlas buttonAtlas;
-	private TextButtonStyle buttonStyle;
+	private TextureAtlas menuAtlas;
+	private TextureAtlas attackAtlas;
+	private TextureAtlas moveAtlas;
+	private TextButtonStyle menuButtonStyle;
+	private TextButtonStyle attackButtonStyle;
+	private TextButtonStyle moveButtonStyle;
 	private TextButton moveBtn;
 	private TextButton atkBtn;
 	private TextButton endTurnBtn;
@@ -55,21 +60,35 @@ public class UI {
 		stage = new Stage(WIDTH, HEIGHT, true);
 		
 		skin = new Skin();
-		buttonAtlas = new TextureAtlas("buttons/button.pack");
-		skin.addRegions(buttonAtlas);
-		buttonStyle = new TextButtonStyle();
-		buttonStyle.up = skin.getDrawable("button");
-		buttonStyle.down = skin.getDrawable("buttonpressed");
-		buttonStyle.font = font;	
+		menuAtlas = new TextureAtlas("buttons/direction.pack");
+		attackAtlas = new TextureAtlas("buttons/attackbutton.pack");
+		moveAtlas = new TextureAtlas("buttons/movebutton.pack");
+		skin.addRegions(menuAtlas);
+		skin.addRegions(attackAtlas);
+		skin.addRegions(moveAtlas);
+		menuButtonStyle = new TextButtonStyle();
+		menuButtonStyle.up = skin.getDrawable("direction");
+		menuButtonStyle.down = skin.getDrawable("directionpressed");
+		menuButtonStyle.font = font;	
 		
-		moveBtn = new TextButton("Move", buttonStyle);
-		atkBtn = new TextButton("Attack", buttonStyle);
-		endTurnBtn = new TextButton("End Turn", buttonStyle);
-		camBtn = new TextButton("Move Camera", buttonStyle);
-		upBtn = new TextButton("up", buttonStyle);
-		rightBtn = new TextButton("right", buttonStyle);
-		downBtn = new TextButton("down", buttonStyle);
-		leftBtn = new TextButton("left", buttonStyle);
+		attackButtonStyle = new TextButtonStyle();
+		attackButtonStyle.up = skin.getDrawable("attackbutton");
+		attackButtonStyle.down = skin.getDrawable("attackbuttonpressed");
+		attackButtonStyle.font = font;
+		
+		moveButtonStyle = new TextButtonStyle();
+		moveButtonStyle.up = skin.getDrawable("movebutton");
+		moveButtonStyle.down = skin.getDrawable("movebuttonpressed");
+		moveButtonStyle.font = font;
+		
+		moveBtn = new TextButton("Move", moveButtonStyle);
+		atkBtn = new TextButton("Attack", attackButtonStyle);
+		endTurnBtn = new TextButton("End Turn", menuButtonStyle);
+		camBtn = new TextButton("Move Camera", menuButtonStyle);
+		upBtn = new TextButton("up", menuButtonStyle);
+		rightBtn = new TextButton("right", menuButtonStyle);
+		downBtn = new TextButton("down", menuButtonStyle);
+		leftBtn = new TextButton("left", menuButtonStyle);
 		stage.addActor(moveBtn);
 		stage.addActor(atkBtn);
 		stage.addActor(endTurnBtn);
@@ -299,7 +318,9 @@ public class UI {
 	}
 	
 	public void dispose() {
-		buttonAtlas.dispose();
+		menuAtlas.dispose();
+		attackAtlas.dispose();
+		moveAtlas.dispose();
 		skin.dispose();
 		stage.dispose();
 	}
