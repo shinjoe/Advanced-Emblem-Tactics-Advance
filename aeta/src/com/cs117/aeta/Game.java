@@ -47,7 +47,7 @@ public class Game implements ApplicationListener {
 	private BitmapFont hpFont;
 	private ActionResolver mActionResolver;
 	
-	ExplosionAnimation explosionAnim;
+	private ExplosionAnimation explosionAnim;
 	
 	public Game(ActionResolver actionResolver) {
 		this.mActionResolver = actionResolver;
@@ -82,7 +82,6 @@ public class Game implements ApplicationListener {
 		ui = new UI(WIDTH, HEIGHT, font, tilemap);
 		REAL_ROWS = tilemap.getNumTilemapRows();
 		REAL_COLS = tilemap.getNumTilemapCols();
-		
 	}
 	
 	
@@ -197,6 +196,7 @@ public class Game implements ApplicationListener {
 		spriteBatch.dispose();
 		font.dispose();
 		shapeRenderer.dispose();
+		tilemap.soundHandler.dispose();
 	}
 	
 	public TileMap getTileMap() {

@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.cs117.aeta.Game;
 import com.cs117.animation.ExplosionAnimation;
 import com.cs117.connection.ActionResolver;
+import com.cs117.sound.SoundHandler;
 import com.cs117.units.Infantry;
 import com.cs117.units.Mech;
 import com.cs117.units.Tank;
@@ -75,6 +75,8 @@ public class TileMap {
     private int explY;
     private ExplosionAnimation explosionAnim;
     public static boolean animOver = false;
+    
+    public static SoundHandler soundHandler;
 
 	public TileMap(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, BitmapFont font, BitmapFont hpFont,
 					ActionResolver ar, ExplosionAnimation explosionAnim) {
@@ -148,6 +150,8 @@ public class TileMap {
 		this.gameOver = false;
 		this.attackOccurred = false;
 		this.explosionAnim = explosionAnim;
+		
+		this.soundHandler = new SoundHandler();
 	}
 	
 	/** === DRAW FUNCTIONS === **/
@@ -365,6 +369,7 @@ public class TileMap {
 					}
 					
 					atkSynch(prevX, prevY, c.getX(), c.getY(), attacked.getHp());
+					soundHandler.playAttackSound(attacking);
 					
 					attacking.setAtkCount(0);
 					attacking.setMvCount(0);
@@ -397,6 +402,7 @@ public class TileMap {
 		explX = atkedX;
 		explY = atkedY;
 		updateOrientation(atking, atkedX, atkingX);
+		soundHandler.playAttackSound(atking);
 		if(newHP <= 0) {
 			
 			if(atked.getTeam() == RED_TEAM)
