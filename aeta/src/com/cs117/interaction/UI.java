@@ -13,7 +13,6 @@ import com.cs117.aeta.Game;
 import com.cs117.tile.Coordinate;
 import com.cs117.tile.TileMap;
 import com.cs117.units.Unit;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
 
 public class UI {
 	

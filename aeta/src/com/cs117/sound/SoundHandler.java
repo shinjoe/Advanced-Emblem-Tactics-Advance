@@ -22,11 +22,12 @@ public class SoundHandler {
 	}
 	
 	public void playAttackSound(Unit u) {
-		if (u.getName().equals("INF")) {
+		String unitType = u.getName();
+		if (unitType.equals("INF")) {
 			infantryAttack.play();
-		} else if (u.getName().equals("MECH")) {
+		} else if (unitType.equals("MECH")) {
 			mechAttack.play();
-		} else if (u.getName().equals("TANK")) {
+		} else if (unitType.equals("TANK")) {
 			tankAttack.play();
 		}
 	}
